@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace ClassLibrary
 {
-    public class Elephant : Animal, IMakeSound // Inherit LandHabitat? Don't Inherit Animal?
+    public class NorweiganBlueParrot : Animal, IMakeSound // Inherit AirHabitat? Don't Inherit Animal?
     {
-
-        public Elephant(string name) 
+        public NorweiganBlueParrot(string name)
         {
             Name = name;
         }

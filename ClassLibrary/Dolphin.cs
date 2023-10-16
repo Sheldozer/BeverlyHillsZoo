@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace ClassLibrary
 {
-    public class Elephant : Animal, IMakeSound // Inherit LandHabitat? Don't Inherit Animal?
+    public class Dolphin : Animal, IMakeSound // Inherit WaterHabitat? Don't Inherit Animal?
     {
-
-        public Elephant(string name) 
+        public Dolphin(string name)
         {
             Name = name;
         }

@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace ClassLibrary
 {
-    public interface IAnimal
+    public abstract class Animal
     {
-        string Name { get; }
+        public string Name { get; set; }
 
-        void Move();
+        public abstract void Move();
     }
 }
