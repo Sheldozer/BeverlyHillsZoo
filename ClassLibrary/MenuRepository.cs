@@ -103,7 +103,7 @@ namespace ClassLibrary
                 .AddChoices(Animals));
 
             Animals.Remove(deleteMenu);
-            ManageAnimals();
+            ManageAnimalsMenu();
         }
 
         public void ViewAnimals()
@@ -121,7 +121,7 @@ namespace ClassLibrary
 
             Console.WriteLine("\nPress any key to continue..");
             Console.ReadLine();
-            ManageAnimals();
+            ManageAnimalsMenu();
         }
 
         // Visitors part of menu
