@@ -6,10 +6,14 @@ using System.Threading.Tasks;
 
 namespace ClassLibrary
 {
-    public abstract class Animal
+    public class Animal
     {
         public string Name { get; set; }
 
-        public abstract void Move();
+        public Animal(string name)
+        {
+            Name = name;
+        }
+
     }
 }
