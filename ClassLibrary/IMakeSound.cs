@@ -6,14 +6,8 @@ using System.Threading.Tasks;
 
 namespace ClassLibrary
 {
-    public class Animal
+    public interface IMakeSound
     {
-        public string Name { get; set; }
-
-        public Animal(string name)
-        {
-            Name = name;
-        }
-
+        void Sound();
     }
 }

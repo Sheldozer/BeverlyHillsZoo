@@ -1,4 +1,5 @@
-﻿using Spectre.Console;
+﻿using ClassLibrary.Models;
+using Spectre.Console;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,12 +10,6 @@ namespace ClassLibrary
 {
     public class MenuRepository
     {
-
-        private List<Animal> Animals;
-        public MenuRepository(List<Animal> animals)
-        {
-            Animals = animals;
-        }
         public void MainMenu()
         {
             var mainMenu = AnsiConsole.Prompt(
@@ -53,6 +48,7 @@ namespace ClassLibrary
         // Animals part of menu
         public void ManageAnimalsMenu()
         {
+            var animalRepo = new AnimalRepository();
             var animalMenu = AnsiConsole.Prompt(
                     new SelectionPrompt<string>()
                         .Title("[green]Animal menu[/]")
@@ -70,18 +66,18 @@ namespace ClassLibrary
             {
                 // Go to some user input where the user gets to create the animal
                 case "Add animal":
-                    AnsiConsole.WriteLine("Go to add animal");
+                    animalRepo.AddAnimal();
                     break;
                 // Go to a menu which contains all the animals, choose which one to update
                 case "Update animal":
-                    AnsiConsole.WriteLine("Go to update animal");
+                    animalRepo.UpdateAnimal();
                     break;
                 // Go to a menu which contains all the animals, choose which one to delete
                 case "Delete animal":
-                    DeleteAnimal();
+                    animalRepo.AddAnimal();
                     break;
                 case "View animals":
-                    ViewAnimals();
+                    animalRepo.AddAnimal();
                     break;
                 case "Go back to main menu":
                     MainMenu();
@@ -92,41 +88,10 @@ namespace ClassLibrary
             }
         }
 
-        public void DeleteAnimal()
-        {
-
-            var deleteMenu = AnsiConsole.Prompt(
-                new SelectionPrompt<Animal>()
-                .Title("[green]Select an animal to delete[/]")
-                .PageSize(10)
-                .MoreChoicesText("[grey](Move up and down to reveal more animals)[/]")
-                .AddChoices(Animals));
-
-            Animals.Remove(deleteMenu);
-            ManageAnimalsMenu();
-        }
-
-        public void ViewAnimals()
-        {
-            var animalTable = new Table();
-
-            animalTable.AddColumn("Animal Name");
-
-            foreach (var animal in Animals)
-            {
-                animalTable.AddRow(animal.Name);
-            }
-
-            AnsiConsole.Render(animalTable);
-
-            Console.WriteLine("\nPress any key to continue..");
-            Console.ReadLine();
-            ManageAnimalsMenu();
-        }
-
         // Visitors part of menu
         public void ManageVisitorsMenu()
         {
+            var visitorRepo = new VisitorRepository();
             var visitorMenu = AnsiConsole.Prompt(
                     new SelectionPrompt<string>()
                         .Title("[green]Visitor menu[/]")
@@ -143,16 +108,16 @@ namespace ClassLibrary
             switch (visitorMenu)
             {
                 case "Add visitor":
-                    AddVisitor();
+                    visitorRepo.AddVisitor();
                     break;
                 case "Update visitor":
-                    UpdateVisitor();
+                    visitorRepo.UpdateVisitor();
                     break;
                 case "Delete visitor":
-                    DeleteVisitor();
+                    visitorRepo.DeleteVisitor();
                     break;
                 case "View visitors":
-                    ViewVisitors();
+                    visitorRepo.ViewVisitors();
                     break;
                 case "Go back to main menu":
                     MainMenu();
@@ -163,30 +128,13 @@ namespace ClassLibrary
             }
         }
 
-        public void AddVisitor()
-        {
-
-        }
-
-        public void UpdateVisitor()
-        {
-
-        }
-
-        public void DeleteVisitor() 
-        { 
-
-        }
-
-        public void ViewVisitors()
-        {
-
-        }
+        
 
         // Guides part of menu
 
         public void ManageGuidesMenu()
         {
+            var guideRepository = new GuideRepository();
             var guideMenu = AnsiConsole.Prompt(
                     new SelectionPrompt<string>()
                         .Title("[green]Guide menu[/]")
@@ -203,16 +151,16 @@ namespace ClassLibrary
             switch (guideMenu)
             {
                 case "Add guide":
-                    AddGuide();
+                    guideRepository.AddGuide();
                     break;
                 case "Update guide":
-                    UpdateGuide();
+                    guideRepository.UpdateGuide();
                     break;
                 case "Delete guide":
-                    DeleteGuide();
+                    guideRepository.DeleteGuide();
                     break;
                 case "View guides":
-                    ViewGuides();
+                    guideRepository.ViewGuides();
                     break;
                 case "Go back to main menu":
                     MainMenu();
@@ -221,26 +169,6 @@ namespace ClassLibrary
                     AnsiConsole.WriteLine("Invalid selection. Please try again.");
                     break;
             }
-        }
-
-        public void AddGuide()
-        {
-
-        }
-        
-        public void UpdateGuide()
-        {
-
-        }
-
-        public void DeleteGuide()
-        {
-
-        }
-
-        public void ViewGuides()
-        {
-
         }
 
         // Book a visit part of menu
