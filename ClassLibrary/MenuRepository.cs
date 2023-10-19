@@ -88,6 +88,11 @@ namespace ClassLibrary
             }
         }
 
+        public void AddAnimalMenu()
+        {
+
+        }
+
         // Visitors part of menu
         public void ManageVisitorsMenu()
         {

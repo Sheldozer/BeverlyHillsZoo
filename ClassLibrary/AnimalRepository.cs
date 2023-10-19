@@ -13,10 +13,10 @@ namespace ClassLibrary
     {
         public void AddAnimal()
         {
+            
             using (var context = new ZooContext())
             {
-                context.Animals.Add(animal);
-                context.SaveChanges();
+
             }
         }
 
