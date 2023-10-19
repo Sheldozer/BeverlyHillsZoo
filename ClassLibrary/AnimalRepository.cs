@@ -1,4 +1,5 @@
-﻿using ClassLibrary.Models;
+﻿using ClassLibrary.Data;
+using ClassLibrary.Models;
 using Spectre.Console;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,11 @@ namespace ClassLibrary
     {
         public void AddAnimal()
         {
-
+            using (var context = new ZooContext())
+            {
+                context.Animals.Add(animal);
+                context.SaveChanges();
+            }
         }
 
         public void UpdateAnimal() 
