@@ -10,6 +10,7 @@ namespace ClassLibrary
 {
     public class MenuRepository
     {
+        private readonly AnimalRepository _animalRepo = new AnimalRepository();
         public void MainMenu()
         {
             var mainMenu = AnsiConsole.Prompt(
@@ -48,7 +49,6 @@ namespace ClassLibrary
         // Animals part of menu
         public void ManageAnimalsMenu()
         {
-            var animalRepo = new AnimalRepository();
             var animalMenu = AnsiConsole.Prompt(
                     new SelectionPrompt<string>()
                         .Title("[green]Animal menu[/]")
@@ -66,18 +66,21 @@ namespace ClassLibrary
             {
                 // Go to some user input where the user gets to create the animal
                 case "Add animal":
-                    animalRepo.AddAnimal();
+                    AddAnimalMenu();
                     break;
                 // Go to a menu which contains all the animals, choose which one to update
                 case "Update animal":
-                    animalRepo.UpdateAnimal();
+                    _animalRepo.UpdateAnimal();
+                    ManageAnimalsMenu();
                     break;
                 // Go to a menu which contains all the animals, choose which one to delete
                 case "Delete animal":
-                    animalRepo.AddAnimal();
+                    _animalRepo.DeleteAnimal();
+                    ManageAnimalsMenu();
                     break;
                 case "View animals":
-                    animalRepo.AddAnimal();
+                    _animalRepo.ViewAnimals();
+                    ManageAnimalsMenu();
                     break;
                 case "Go back to main menu":
                     MainMenu();
@@ -91,8 +94,53 @@ namespace ClassLibrary
         public void AddAnimalMenu()
         {
 
-        }
+            var name = AnsiConsole.Ask<string>("Enter animal name: ");
 
+            var animalType = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                .Title("Choose Animal Type")
+                .PageSize(4)
+                .AddChoices("Air", "Water", "Land", "Go back"));
+
+            switch (animalType)
+            {
+                case "Air":
+                    var maxAltitude = AnsiConsole.Ask<int>("Enter animal max altitude: ");
+
+                    var airAnimal = new Air
+                    {
+                        Name = name,
+                        MaxAltitude = maxAltitude
+                    };
+                    _animalRepo.AddAnimal(airAnimal);
+                    break;
+
+                case "Water":
+                    var divingDepth = AnsiConsole.Ask<int>("Enter animal diving depth: ");
+
+                    var waterAnimal = new Water
+                    {
+                        Name = name,
+                        DivingDepth = divingDepth
+                    };
+                    _animalRepo.AddAnimal(waterAnimal);
+                    break;
+                case "Land":
+                    var speed = AnsiConsole.Ask<int>("Enter animal speed: ");
+
+                    var landAnimal = new Land
+                    {
+                        Name = name,
+                        Speed = speed
+                    };
+                    _animalRepo.AddAnimal(landAnimal);
+                    break;
+                case "Go back":
+                    ManageAnimalsMenu();
+                    break;
+            }
+            ManageAnimalsMenu();
+        }
         // Visitors part of menu
         public void ManageVisitorsMenu()
         {
