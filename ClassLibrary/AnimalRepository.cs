@@ -98,5 +98,55 @@ namespace ClassLibrary
             Console.ReadKey();
         }
 
+        public void SeedAnimals()
+        {
+            // if there are no animals
+            if (!_context.Animals.Any())
+            {
+                // Water animals
+                var electricEel = new Water
+                {
+                    Name = "Electric Eel",
+                    DivingDepth = 50
+                };
+                _context.Add(electricEel);
+
+                var dolphin = new Water
+                {
+                    Name = "Dolphin",
+                    DivingDepth = 100
+                };
+                _context.Add(dolphin);
+                // Air animals
+                var norweiganBlueParrot = new Air
+                {
+                    Name = "Norweigan Blue Parrot",
+                    MaxAltitude = 100
+                };
+                _context.Add(norweiganBlueParrot);
+                var baldEagle = new Air
+                {
+                    Name = "Bald Eagle",
+                    MaxAltitude = 300
+                };
+                _context.Add(baldEagle);
+                // Land animals
+                var elephant = new Land
+                {
+                    Name = "Elephant",
+                    Speed = 40
+                };
+                _context.Add(elephant);
+                var panther = new Land
+                {
+                    Name = "Panther",
+                    Speed = 60
+                };
+                _context.Add(panther);
+
+                _context.SaveChanges();
+            }
+        }
+
     }
 }
