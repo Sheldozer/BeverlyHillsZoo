@@ -10,7 +10,7 @@ namespace ClassLibrary.Models
     public class Visit
     {
         [Key]
-        public int VisitId { get; set; }
+        public int Id { get; set; }
         public int AnimalId { get; set; }
         public DateTime VisitDate { get; set; }
 
