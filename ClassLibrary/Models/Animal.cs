@@ -15,6 +15,8 @@ namespace ClassLibrary.Models
 
         public abstract void Move();
 
+        // Times the animal has been visited
+        public virtual ICollection<Visit> Visits { get; set; }
 
     }
 }
