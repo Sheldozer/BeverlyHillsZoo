@@ -4,6 +4,7 @@ using ClassLibrary.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ClassLibrary.Migrations
 {
     [DbContext(typeof(ZooContext))]
-    partial class ZooContextModelSnapshot : ModelSnapshot
+    [Migration("20231020073443_AddVisitsTable")]
+    partial class AddVisitsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -66,13 +69,11 @@ namespace ClassLibrary.Migrations
 
             modelBuilder.Entity("ClassLibrary.Models.Visit", b =>
                 {
-
-                    b.Property<int>("Id")
+                    b.Property<int>("VisitId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("VisitId"));
 
                     b.Property<int>("AnimalId")
                         .HasColumnType("int");
@@ -83,9 +84,7 @@ namespace ClassLibrary.Migrations
                     b.Property<int>("VisitTimeSlot")
                         .HasColumnType("int");
 
-
-                    b.HasKey("Id");
-
+                    b.HasKey("VisitId");
 
                     b.HasIndex("AnimalId");
 
@@ -114,14 +113,12 @@ namespace ClassLibrary.Migrations
                     b.Property<int>("VisitorsId")
                         .HasColumnType("int");
 
-
-                    b.Property<int>("VisitsId")
+                    b.Property<int>("VisitsVisitId")
                         .HasColumnType("int");
 
-                    b.HasKey("VisitorsId", "VisitsId");
+                    b.HasKey("VisitorsId", "VisitsVisitId");
 
-                    b.HasIndex("VisitsId");
-
+                    b.HasIndex("VisitsVisitId");
 
                     b.ToTable("VisitVisitor");
                 });
@@ -177,9 +174,7 @@ namespace ClassLibrary.Migrations
 
                     b.HasOne("ClassLibrary.Models.Visit", null)
                         .WithMany()
-
-                        .HasForeignKey("VisitsId")
-
+                        .HasForeignKey("VisitsVisitId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
