@@ -16,6 +16,7 @@ namespace ClassLibrary.Data
         public DbSet<Animal> Animals { get; set; }
         public DbSet<Visitor> Visitors { get; set; }
         public DbSet<Guide> Guides { get; set; }
+        public DbSet<Visit> Visits { get; set; }
 
         // Tobias Connectionstring: Server=.;Database=BeverlyHillsZoo;Trusted_Connection=True;Encrypt=True;TrustServerCertificate=True;
         // Julia Connectionstring: 
