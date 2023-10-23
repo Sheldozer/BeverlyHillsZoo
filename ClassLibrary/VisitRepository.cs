@@ -26,6 +26,11 @@ namespace ClassLibrary
                 VisitDate = visitDate,
                 VisitTimeSlot = visitTimeSlot
             };
+            if (!newVisit.IsValid())
+            {
+                AnsiConsole.MarkupLine("[red]A visit can have a maximum of 5 visitors![/]");
+                return;
+            }
 
             _context.Add(newVisit);
             _context.SaveChanges();
