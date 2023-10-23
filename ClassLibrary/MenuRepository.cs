@@ -281,6 +281,7 @@ namespace ClassLibrary
             {
                 case "Book a visit for tomorrow":
                     BookVisit();
+                    MainMenu();
                     break;
                 case "Go back to main menu":
                     MainMenu();

@@ -30,5 +30,14 @@ namespace ClassLibrary.Models
             Morning,
             Afternoon
         }
+
+        public bool IsValid()
+        {
+            if (Visitors.Count > 5)
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }
