@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ClassLibrary.Migrations
 {
     [DbContext(typeof(ZooContext))]
-    [Migration("20231020073443_AddVisitsTable")]
-    partial class AddVisitsTable
+    [Migration("20231023074008_VisitTable")]
+    partial class VisitTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,8 @@ namespace ClassLibrary.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.HasSequence<int>("PassNumber");
 
             modelBuilder.Entity("ClassLibrary.Models.Animal", b =>
                 {
@@ -69,11 +71,11 @@ namespace ClassLibrary.Migrations
 
             modelBuilder.Entity("ClassLibrary.Models.Visit", b =>
                 {
-                    b.Property<int>("VisitId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("VisitId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("AnimalId")
                         .HasColumnType("int");
@@ -84,7 +86,7 @@ namespace ClassLibrary.Migrations
                     b.Property<int>("VisitTimeSlot")
                         .HasColumnType("int");
 
-                    b.HasKey("VisitId");
+                    b.HasKey("Id");
 
                     b.HasIndex("AnimalId");
 
@@ -103,6 +105,14 @@ namespace ClassLibrary.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("PassNumber")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValueSql("NEXT VALUE FOR PassNumber");
+
+                    b.Property<bool>("Removed")
+                        .HasColumnType("bit");
+
                     b.HasKey("Id");
 
                     b.ToTable("Visitors");
@@ -113,12 +123,12 @@ namespace ClassLibrary.Migrations
                     b.Property<int>("VisitorsId")
                         .HasColumnType("int");
 
-                    b.Property<int>("VisitsVisitId")
+                    b.Property<int>("VisitsId")
                         .HasColumnType("int");
 
-                    b.HasKey("VisitorsId", "VisitsVisitId");
+                    b.HasKey("VisitorsId", "VisitsId");
 
-                    b.HasIndex("VisitsVisitId");
+                    b.HasIndex("VisitsId");
 
                     b.ToTable("VisitVisitor");
                 });
@@ -174,7 +184,7 @@ namespace ClassLibrary.Migrations
 
                     b.HasOne("ClassLibrary.Models.Visit", null)
                         .WithMany()
-                        .HasForeignKey("VisitsVisitId")
+                        .HasForeignKey("VisitsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
