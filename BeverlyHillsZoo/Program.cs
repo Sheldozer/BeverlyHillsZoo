@@ -8,6 +8,8 @@ internal class Program
     {
         var visitorSeeding = new VisitorRepository();
         visitorSeeding.SeedingVisitorData();
+        var animalSeeding = new AnimalRepository();
+        animalSeeding.SeedAnimals();
 
         var menuRepository = new MenuRepository();
         menuRepository.MainMenu();

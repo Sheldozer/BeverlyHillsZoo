@@ -24,7 +24,6 @@ namespace ClassLibrary
                             "Manage animals",
                             "Manage visitors",
                             "Manage guides",
-                            "Seed data",
                             "Book a visit"
                         ));
 
@@ -38,15 +37,6 @@ namespace ClassLibrary
                     break;
                 case "Manage guides":
                     ManageGuidesMenu();
-                    break;
-                case "Seed data":
-                    _animalRepo.SeedAnimals();
-                    // Add more seeding for visitors
-
-                    AnsiConsole.WriteLine("Seeding database...\nPress any key to continue");
-                    Console.ReadKey();
-
-                    MainMenu();
                     break;
                 case "Book a visit":
                     BookAVisitMenu();
