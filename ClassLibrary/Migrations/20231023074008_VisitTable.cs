@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ClassLibrary.Migrations
 {
     /// <inheritdoc />
-    public partial class AddVisitsTable : Migration
+    public partial class VisitTable : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,7 +15,7 @@ namespace ClassLibrary.Migrations
                 name: "Visits",
                 columns: table => new
                 {
-                    VisitId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AnimalId = table.Column<int>(type: "int", nullable: false),
                     VisitDate = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -23,7 +23,7 @@ namespace ClassLibrary.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Visits", x => x.VisitId);
+                    table.PrimaryKey("PK_Visits", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Visits_Animals_AnimalId",
                         column: x => x.AnimalId,
@@ -37,11 +37,11 @@ namespace ClassLibrary.Migrations
                 columns: table => new
                 {
                     VisitorsId = table.Column<int>(type: "int", nullable: false),
-                    VisitsVisitId = table.Column<int>(type: "int", nullable: false)
+                    VisitsId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_VisitVisitor", x => new { x.VisitorsId, x.VisitsVisitId });
+                    table.PrimaryKey("PK_VisitVisitor", x => new { x.VisitorsId, x.VisitsId });
                     table.ForeignKey(
                         name: "FK_VisitVisitor_Visitors_VisitorsId",
                         column: x => x.VisitorsId,
@@ -49,10 +49,10 @@ namespace ClassLibrary.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_VisitVisitor_Visits_VisitsVisitId",
-                        column: x => x.VisitsVisitId,
+                        name: "FK_VisitVisitor_Visits_VisitsId",
+                        column: x => x.VisitsId,
                         principalTable: "Visits",
-                        principalColumn: "VisitId",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -62,9 +62,9 @@ namespace ClassLibrary.Migrations
                 column: "AnimalId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_VisitVisitor_VisitsVisitId",
+                name: "IX_VisitVisitor_VisitsId",
                 table: "VisitVisitor",
-                column: "VisitsVisitId");
+                column: "VisitsId");
         }
 
         /// <inheritdoc />
