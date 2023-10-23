@@ -15,9 +15,19 @@ namespace ClassLibrary
     {
         private readonly ZooContext _context = new ZooContext();
 
-        public void AddVisit(Visit visit)
+        public void AddVisit(int animalId, List<int> visitorIds, DateTime visitDate, Visit.TimeSlot visitTimeSlot)
         {
-            _context.Add(visit);
+            var visitorsInVisit = _context.Visitors.Where(v => visitorIds.Contains(v.Id)).ToList();
+
+            var newVisit = new Visit
+            {
+                AnimalId = animalId,
+                Visitors = visitorsInVisit,
+                VisitDate = visitDate,
+                VisitTimeSlot = visitTimeSlot
+            };
+
+            _context.Add(newVisit);
             _context.SaveChanges();
         }
 
