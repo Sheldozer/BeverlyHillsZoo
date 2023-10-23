@@ -38,7 +38,7 @@ namespace ClassLibrary
 
         public void ViewVisits()
         {
-           // add logic
+           
         }
     }
 }

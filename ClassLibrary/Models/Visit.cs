@@ -16,10 +16,13 @@ namespace ClassLibrary.Models
 
         // Is it a Morning or Afternoon visit?
         public TimeSlot VisitTimeSlot { get; set; }
+        public bool Archived { get; set; }
 
         // The list of visitors for this visit
         public ICollection<Visitor> Visitors { get; set; } 
+     
         public virtual Animal Animal { get; set; }
+
 
 
         public enum TimeSlot

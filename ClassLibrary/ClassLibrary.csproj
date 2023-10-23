@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20231023090317_changesInvisitTable.cs" />
+    <Compile Remove="Migrations\20231023090317_changesInvisitTable.Designer.cs" />
+    <Compile Remove="Migrations\20231023094831_BoolArchivedVisits.cs" />
+    <Compile Remove="Migrations\20231023094831_BoolArchivedVisits.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.12" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.12">
       <PrivateAssets>all</PrivateAssets>

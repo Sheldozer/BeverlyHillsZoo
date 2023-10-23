@@ -16,8 +16,6 @@ namespace ClassLibrary.Models
         [Key]
         public int Id { get; set; }
         public string Name { get; set; }
-
-        
         public int PassNumber {get; set;}
 
         public bool Removed { get; set; }
