@@ -324,6 +324,8 @@ namespace ClassLibrary
                 .UseConverter(visitor => visitor.Name)
                 .AddChoices(visitors));
 
+            var selectedVisitorsIds = selectedVisitors.Select(visitor => visitor.Id).ToList();
+
             // Visit booked for the next day
             var visitDate = DateTime.Now.AddDays(1).Date;
 
@@ -332,17 +334,8 @@ namespace ClassLibrary
                 .Title("Choose a time slot for the visit")
                 .PageSize(3)
                 .AddChoices(Visit.TimeSlot.Morning, Visit.TimeSlot.Afternoon));
-
-            // Create the visit
-            var newVisit = new Visit
-            {
-                AnimalId = selectedAnimal.Id,
-                Visitors = selectedVisitors.ToList(),
-                VisitDate = visitDate,
-                VisitTimeSlot = visitTimeSlot
-            };
             
-            _visitRepo.AddVisit(newVisit);
+            _visitRepo.AddVisit(selectedAnimal.Id, selectedVisitorsIds, visitDate, visitTimeSlot);
 
             AnsiConsole.MarkupLine("[green]Visit booked successfully![/]");
             AnsiConsole.Markup("Press any key to continue...");
