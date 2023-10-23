@@ -3,6 +3,7 @@ using ClassLibrary.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ClassLibrary.Migrations
 {
     [DbContext(typeof(ZooContext))]
-    partial class ZooContextModelSnapshot : ModelSnapshot
+    [Migration("20231021140411_AddPassNumberAndRemovedToVisitor")]
+    partial class AddPassNumberAndRemovedToVisitor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -20,8 +23,6 @@ namespace ClassLibrary.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.HasSequence<int>("PassNumber");
 
             modelBuilder.Entity("ClassLibrary.Models.Animal", b =>
                 {
@@ -78,9 +79,7 @@ namespace ClassLibrary.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PassNumber")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValueSql("NEXT VALUE FOR PassNumber");
+                        .HasColumnType("int");
 
                     b.Property<bool>("Removed")
                         .HasColumnType("bit");
