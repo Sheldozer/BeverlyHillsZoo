@@ -1,10 +1,12 @@
-﻿using ClassLibrary.Models;
+﻿using ClassLibrary.Data;
+using ClassLibrary.Models;
 using Spectre.Console;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 
 namespace ClassLibrary
 {
@@ -202,7 +204,7 @@ namespace ClassLibrary
             switch (visitorMenu)
             {
                 case "Add visitor":
-                    visitorRepo.AddVisitor();
+                visitorRepo.AddVisitor();
                     break;
                 case "Update visitor":
                     visitorRepo.UpdateVisitor();
