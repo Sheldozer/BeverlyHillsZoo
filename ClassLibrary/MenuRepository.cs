@@ -12,6 +12,7 @@ namespace ClassLibrary
 {
     public class MenuRepository
     {
+        private readonly AnimalRepository _animalRepo = new AnimalRepository();
         public void MainMenu()
         {
             var mainMenu = AnsiConsole.Prompt(
@@ -23,6 +24,7 @@ namespace ClassLibrary
                             "Manage animals",
                             "Manage visitors",
                             "Manage guides",
+                            "Seed data",
                             "Book a visit"
                         ));
 
@@ -37,6 +39,15 @@ namespace ClassLibrary
                 case "Manage guides":
                     ManageGuidesMenu();
                     break;
+                case "Seed data":
+                    _animalRepo.SeedAnimals();
+                    // Add more seeding for visitors
+
+                    AnsiConsole.WriteLine("Seeding database...\nPress any key to continue");
+                    Console.ReadKey();
+
+                    MainMenu();
+                    break;
                 case "Book a visit":
                     BookAVisitMenu();
                     break;
@@ -50,7 +61,6 @@ namespace ClassLibrary
         // Animals part of menu
         public void ManageAnimalsMenu()
         {
-            var animalRepo = new AnimalRepository();
             var animalMenu = AnsiConsole.Prompt(
                     new SelectionPrompt<string>()
                         .Title("[green]Animal menu[/]")
@@ -68,18 +78,21 @@ namespace ClassLibrary
             {
                 // Go to some user input where the user gets to create the animal
                 case "Add animal":
-                    animalRepo.AddAnimal();
+                    AddAnimalMenu();
                     break;
                 // Go to a menu which contains all the animals, choose which one to update
                 case "Update animal":
-                    animalRepo.UpdateAnimal();
+                    _animalRepo.UpdateAnimal();
+                    ManageAnimalsMenu();
                     break;
                 // Go to a menu which contains all the animals, choose which one to delete
                 case "Delete animal":
-                    animalRepo.AddAnimal();
+                    _animalRepo.DeleteAnimal();
+                    ManageAnimalsMenu();
                     break;
                 case "View animals":
-                    animalRepo.AddAnimal();
+                    _animalRepo.ViewAnimals();
+                    ManageAnimalsMenu();
                     break;
                 case "Go back to main menu":
                     MainMenu();
@@ -93,8 +106,84 @@ namespace ClassLibrary
         public void AddAnimalMenu()
         {
 
-        }
+            var name = AnsiConsole.Prompt(
+                new TextPrompt<string>("Enter animal name: ")
+                .Validate(input =>
+                {
+                    if (string.IsNullOrWhiteSpace(input) || input.Length > 50)
+                        return ValidationResult.Error("Please enter a valid name for the animal. (1-50 chars)");
+                    return ValidationResult.Success();
+                }));
 
+
+            var animalType = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                .Title("Choose Animal Type")
+                .PageSize(4)
+                .AddChoices("Air", "Water", "Land", "Go back"));
+
+            switch (animalType)
+            {
+                case "Air":
+
+
+                    var maxAltitude = AnsiConsole.Prompt(
+                        new TextPrompt<int>("Enter animal max altitude")
+                        .Validate(altitude =>
+                        {
+                            if (altitude <= 0 || altitude > 1000)
+                                return ValidationResult.Error("Please enter a valid altitude for the animal. (1-1000)");
+                            return ValidationResult.Success();
+                        }));
+
+                    var airAnimal = new Air
+                    {
+                        Name = name,
+                        MaxAltitude = maxAltitude
+                    };
+                    _animalRepo.AddAnimal(airAnimal);
+                    break;
+
+                case "Water":
+                    var divingDepth = AnsiConsole.Prompt(
+                        new TextPrompt<int>("Enter animal max altitude")
+                        .Validate(depth =>
+                        {
+                             if (depth <= 0 || depth > 1000)
+                                return ValidationResult.Error("Please enter a valid depth for the animal. (1-1000)");
+                             return ValidationResult.Success();
+                        }));
+
+                    var waterAnimal = new Water
+                    {
+                        Name = name,
+                        DivingDepth = divingDepth
+                    };
+                    _animalRepo.AddAnimal(waterAnimal);
+                    break;
+                case "Land":
+                    var speed = AnsiConsole.Prompt(
+                        new TextPrompt<int>("Enter animal max altitude")
+                        .Validate(speed =>
+                        {
+                            if (speed < 0 || speed > 200)
+                                return ValidationResult.Error("Please enter a valid speed for the animal. (1-200)");
+                            return ValidationResult.Success();
+                        }));
+
+                    var landAnimal = new Land
+                    {
+                        Name = name,
+                        Speed = speed
+                    };
+                    _animalRepo.AddAnimal(landAnimal);
+                    break;
+                case "Go back":
+                    ManageAnimalsMenu();
+                    break;
+            }
+            ManageAnimalsMenu();
+        }
         // Visitors part of menu
         public void ManageVisitorsMenu()
         {
