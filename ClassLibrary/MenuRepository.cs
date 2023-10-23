@@ -1,5 +1,6 @@
 ﻿using ClassLibrary.Data;
 using ClassLibrary.Models;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using Spectre.Console;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,10 @@ namespace ClassLibrary
 {
     public class MenuRepository
     {
+        private readonly ZooContext _context = new ZooContext();
+
         private readonly AnimalRepository _animalRepo = new AnimalRepository();
+        private readonly VisitRepository _visitRepo = new VisitRepository();
         public void MainMenu()
         {
             var mainMenu = AnsiConsole.Prompt(
@@ -39,7 +43,7 @@ namespace ClassLibrary
                     ManageGuidesMenu();
                     break;
                 case "Book a visit":
-                    BookAVisitMenu();
+                    ManageVisitMenu();
                     break;
                 default:
                     AnsiConsole.WriteLine("Invalid selection. Please try again.");
@@ -257,9 +261,9 @@ namespace ClassLibrary
             }
         }
 
-        // Book a visit part of menu
+        // Visit part of menu
 
-        public void BookAVisitMenu()
+        public void ManageVisitMenu()
         {
             var bookAVisitMenu = AnsiConsole.Prompt(
                       new SelectionPrompt<string>()
@@ -267,16 +271,26 @@ namespace ClassLibrary
                           .PageSize(10)
                           .MoreChoicesText("[grey](Move up and down to reveal more options)[/]")
                           .AddChoices(
-                              "Book a visit",
+                              "Book a visit for tomorrow",
+                              "Delete visit",
+                              "View visits",
                               "Go back to main menu"
                           ));
 
             switch (bookAVisitMenu)
             {
-                case "Book a visit":
+                case "Book a visit for tomorrow":
                     BookVisit();
                     break;
                 case "Go back to main menu":
+                    MainMenu();
+                    break;
+                case "Delete visit":
+                    _visitRepo.DeleteVisit();
+                    MainMenu(); 
+                    break;
+                case "View visits":
+                    _visitRepo.ViewVisits();
                     MainMenu();
                     break;
                 default:
@@ -287,7 +301,52 @@ namespace ClassLibrary
 
         public void BookVisit()
         {
+            // Select animal to visit
+            var animals = _context.Animals.ToList();
+            var selectedAnimal = AnsiConsole.Prompt(
+                new SelectionPrompt<Animal>()
+                .Title("Choose an animal to visit")
+                .PageSize(10)
+                .UseConverter(animal => animal.Name)
+                .AddChoices(animals));
 
+            if (selectedAnimal == null)
+            {
+                AnsiConsole.MarkupLine("[red]No animal selected![/]");
+                return;
+            }
+
+            // Add visitors to the visit
+            var visitors = _context.Visitors.ToList();
+            var selectedVisitors = AnsiConsole.Prompt(
+                new MultiSelectionPrompt<Visitor>()
+                .PageSize(10)
+                .UseConverter(visitor => visitor.Name)
+                .AddChoices(visitors));
+
+            // Visit booked for the next day
+            var visitDate = DateTime.Now.AddDays(1).Date;
+
+            var visitTimeSlot = AnsiConsole.Prompt(
+                new SelectionPrompt<Visit.TimeSlot>()
+                .Title("Choose a time slot for the visit")
+                .PageSize(3)
+                .AddChoices(Visit.TimeSlot.Morning, Visit.TimeSlot.Afternoon));
+
+            // Create the visit
+            var newVisit = new Visit
+            {
+                AnimalId = selectedAnimal.Id,
+                Visitors = selectedVisitors.ToList(),
+                VisitDate = visitDate,
+                VisitTimeSlot = visitTimeSlot
+            };
+            
+            _visitRepo.AddVisit(newVisit);
+
+            AnsiConsole.MarkupLine("[green]Visit booked successfully![/]");
+            AnsiConsole.Markup("Press any key to continue...");
+            Console.ReadKey();
         }
     }
 }
