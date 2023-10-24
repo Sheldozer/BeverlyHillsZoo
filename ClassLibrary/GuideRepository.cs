@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ClassLibrary.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,11 @@ namespace ClassLibrary
 {
     public class GuideRepository
     {
+        private readonly ZooContext _context;
+        public GuideRepository(ZooContext context)
+        {
+            _context = context;
+        }
         public void AddGuide()
         {
      
@@ -24,11 +30,6 @@ namespace ClassLibrary
         }
 
         public void ViewGuides()
-        {
-            
-        }
-
-        private void ReturnToMenu() // Returns back to the Main menu
         {
             
         }

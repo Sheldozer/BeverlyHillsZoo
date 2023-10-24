@@ -11,7 +11,11 @@ namespace ClassLibrary
 {
     public class AnimalRepository
     {
-        private readonly ZooContext _context = new ZooContext();
+        private readonly ZooContext _context;
+        public AnimalRepository(ZooContext context)
+        {
+            _context = context;
+        }
         public void AddAnimal(Animal animal)
         {
                 _context.Add(animal);
