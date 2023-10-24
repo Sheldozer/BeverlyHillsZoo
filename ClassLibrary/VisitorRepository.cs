@@ -12,7 +12,12 @@ namespace ClassLibrary
 {
     public class VisitorRepository
     {
-        private ZooContext _dbContext = new ZooContext();
+        private ZooContext _dbContext;
+
+        public VisitorRepository(ZooContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
 
         public void AddVisitor()
         {
@@ -24,19 +29,14 @@ namespace ClassLibrary
 
             _dbContext.Visitors.Add(newVisitor);
             _dbContext.SaveChanges();
-
-            //getting us back to sub menu
-            var menuRepository = new MenuRepository();
-            menuRepository.ManageVisitorsMenu();
         }
         public void UpdateVisitor()
         {
             int input = UserInputVisitorPassNumber();
-            var menuRepository = new MenuRepository();
 
             if (input == -1)
             {
-                menuRepository.ManageVisitorsMenu(); //gets back to sub menu if incorrect pass number
+                return;
             }
             else
             {
@@ -48,15 +48,10 @@ namespace ClassLibrary
                     qry.Name = newName;
 
                     _dbContext.SaveChanges();
-
-                    //getting us back to sub menu
-                    menuRepository.ManageVisitorsMenu();
-                         
             }            
         }
         public void DeleteVisitor()
         {
-            var menuRepository = new MenuRepository();
             AnsiConsole.MarkupLine("[red]Delete visitor[/]");
 
             int input = UserInputVisitorPassNumber();
@@ -64,15 +59,13 @@ namespace ClassLibrary
             if (input == -1)
             {
                 
-                menuRepository.ManageVisitorsMenu();
+                return; 
             }
             else
             {
                 var qry = _dbContext.Visitors.FirstOrDefault(v => v.PassNumber == input);
                     qry.Removed = true;
                     _dbContext.SaveChanges();
-
-                menuRepository.ManageVisitorsMenu();
             }
         }
         public void ViewVisitors()
@@ -96,9 +89,6 @@ namespace ClassLibrary
 
             AnsiConsole.Render(table);
 
-            //getting us back to sub menu
-            var menuRepository = new MenuRepository();
-            menuRepository.ManageVisitorsMenu();
         }
         public int UserInputVisitorPassNumber()
         {
