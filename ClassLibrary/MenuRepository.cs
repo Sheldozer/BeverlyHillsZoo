@@ -390,7 +390,11 @@ namespace ClassLibrary
                 menuItems.Add($"{visitInfo.First().Name} on {visitInfo.First().VisitDate} with {visitorNames}");
             }
 
-            var visitsRepository = new VisitorRepository();
+            /* _visitRepo.DeleteVisit(selectedVisitID);*/ //Get the ID to the delete method
+
+            
+            //var visitsRepository = new VisitorRepository();
+
             var deleteVisitMenu = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
                     .Title("[green]Delete Visit menu[/]")
@@ -411,8 +415,8 @@ namespace ClassLibrary
                 }
             }
 
-            var xyz = new VisitRepository(); //remove row
-            xyz.DeleteVisit(selectedVisitID);
+   
+            _visitRepo.DeleteVisit(selectedVisitID); //Get the ID to the delete method
 
             return selectedVisitID;
 

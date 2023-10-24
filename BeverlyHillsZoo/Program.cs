@@ -20,6 +20,20 @@ internal class Program
             menuRepository.MainMenu();
         }
 
+
+        using var dbContext = new ZooContext(juliaOptions);
+
+        var visitorRepo = new VisitorRepository(dbContext); // add dependecy injection
+        visitorRepo.SeedingVisitorData();
+        var animalRepo = new AnimalRepository(dbContext);
+        animalRepo.SeedAnimals();
+        var visitsRepoSeed = new VisitRepository(dbContext);
+        visitsRepoSeed.SeedVisitsData();
+
+        var visitRepo = new VisitRepository(dbContext);
+        var guideRepo = new GuideRepository(dbContext);
+      
+
     }
     // Instance of IServiceProvider containing all our configured services, simmilar to the startup project of a web application
     private static IServiceProvider ConfigureServices()
@@ -36,6 +50,7 @@ internal class Program
         services.AddTransient<VisitRepository>();
         services.AddTransient<GuideRepository>();
         services.AddTransient<MenuRepository>();
+
 
         return services.BuildServiceProvider();
     }

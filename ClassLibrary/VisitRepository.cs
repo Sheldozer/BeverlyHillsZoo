@@ -9,6 +9,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static ClassLibrary.Models.Visit;
 
 namespace ClassLibrary
 {
@@ -45,11 +46,11 @@ namespace ClassLibrary
         public void DeleteVisit(int toDelete)
         {
 
-            var visitToDelete = _context.Visits.FirstOrDefault(v => v.Id == toDelete); 
+            var visitToDelete = _context.Visits.FirstOrDefault(v => v.Id == toDelete);
 
             if (visitToDelete != null)
             {
-                _context.Visits.Remove(visitToDelete); 
+                _context.Visits.Remove(visitToDelete);
                 _context.SaveChanges();
                 Console.WriteLine($"Visit with Id {toDelete} deleted successfully.");
             }
@@ -90,7 +91,8 @@ namespace ClassLibrary
                 {
                     table.AddRow("", "", "", item.VisitorName, item.PassNumber.ToString());
                 }
-            } AnsiConsole.Write(table);
+            }
+            AnsiConsole.Write(table);
         }
 
         /// <summary>
@@ -104,9 +106,41 @@ namespace ClassLibrary
                 if (visit.VisitDate.AddDays(1) < DateTime.Now && !visit.Archived)
                 {
                     visit.Archived = true;
-                    _context.SaveChanges(); 
+                    _context.SaveChanges();
                 }
-            }           
+            }
         }
+
+        /// <summary>
+        /// Seeding the visits but not visitors attached to it
+        /// </summary>
+        public void SeedVisitsData()
+        {
+            if (!_context.Visits.Any())
+            {
+                List<int> visitorIds = new List<int> { 1, 2 };
+                List<Visitor> visitorsFirst = _context.Visitors.Where(v => visitorIds.Contains(v.Id)).ToList();
+
+                visitorIds = new List<int> { 3, 1 };
+                List<Visitor> visitorsSecond = _context.Visitors.Where(v => visitorIds.Contains(v.Id)).ToList();
+
+                visitorIds = new List<int> { 1 };
+                List<Visitor> visitorsThird = _context.Visitors.Where(v => visitorIds.Contains(v.Id)).ToList();
+
+                var visits = new List<Visit>
+            {
+                    new Visit {AnimalId = 1, VisitDate = new DateTime(2023, 10, 30), VisitTimeSlot = TimeSlot.Morning, Archived = false, Visitors = visitorsFirst},
+                    new Visit {AnimalId = 2, VisitDate = new DateTime(2023, 11, 04), VisitTimeSlot = TimeSlot.Afternoon, Archived = false,Visitors = visitorsSecond},
+                    new Visit {AnimalId = 3, VisitDate = new DateTime(2023, 10, 03), VisitTimeSlot = TimeSlot.Morning, Archived = true, Visitors = visitorsThird},
+            };
+
+                foreach (var visit in visits)
+                {
+                    _context.Visits.Add(visit);
+                }
+                _context.SaveChanges();
+            }
+        }
+       
     }
 }
