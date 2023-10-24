@@ -10,7 +10,8 @@ namespace ClassLibrary.Data
 {
     public class ZooContext : DbContext
     {
-        public ZooContext() : base()
+        public ZooContext(DbContextOptions<ZooContext> options)
+         : base(options)
         { }
 
         public DbSet<Animal> Animals { get; set; }
@@ -18,12 +19,7 @@ namespace ClassLibrary.Data
         public DbSet<Guide> Guides { get; set; }
         public DbSet<Visit> Visits { get; set; }
 
-        // Tobias Connectionstring: Server=.;Database=BeverlyHillsZoo;Trusted_Connection=True;Encrypt=True;TrustServerCertificate=True;
-        // Julia Connectionstring: Server=DESKTOP-P4PT1M9\\SQLEXPRESS;Database=BeverlyHillsZoo;Trusted_Connection=True;TrustServerCertificate=True;Encrypt=False;
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer("Server=DESKTOP-P4PT1M9\\SQLEXPRESS;Database=BeverlyHillsZoo;Trusted_Connection=True;TrustServerCertificate=True;Encrypt=False;");
-        }
+       
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 

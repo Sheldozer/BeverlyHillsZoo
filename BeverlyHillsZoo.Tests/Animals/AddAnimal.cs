@@ -1,5 +1,7 @@
 using ClassLibrary;
 using ClassLibrary.Data;
+using ClassLibrary.Models;
+using Microsoft.EntityFrameworkCore;
 using Moq;
 
 namespace BeverlyHillsZoo.Tests.Animals
@@ -10,8 +12,13 @@ namespace BeverlyHillsZoo.Tests.Animals
         public void AddAnimal_ShouldAddAnimalToTheDatabase()
         {
             // Arrange
-            var mockContext = new Mock<ZooContext>();
-            var animalRepo = new AnimalRepository(mockContext.Object);
+            var options = new DbContextOptionsBuilder<ZooContext>()
+                .UseInMemoryDatabase(databaseName: "AddAnimalTestDatabase")
+                .Options;
+
+            using var contest = new ZooContext(options);
+                
+              
         }
     }
 }
