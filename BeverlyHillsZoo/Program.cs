@@ -21,7 +21,7 @@ internal class Program
         }
 
     }
-
+    // Instance of IServiceProvider containing all our configured services, simmilar to the startup project of a web application
     private static IServiceProvider ConfigureServices()
     {
         var services = new ServiceCollection();
@@ -30,7 +30,7 @@ internal class Program
         var juliasConnection = "Server=DESKTOP-P4PT1M9\\SQLEXPRESS;Database=BeverlyHillsZoo;Trusted_Connection=True;TrustServerCertificate=True;Encrypt=False;";
 
         services.AddDbContext<ZooContext>(options => options.UseSqlServer(tobiasConnection));
-
+        // Dependecy injection
         services.AddTransient<AnimalRepository>();
         services.AddTransient<VisitorRepository>();
         services.AddTransient<VisitRepository>();

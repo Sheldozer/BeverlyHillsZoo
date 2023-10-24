@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace ClassLibrary.Data
 {
+    // Factory for creating instances of ZooContext during design
     public class ZooContextFactory : IDesignTimeDbContextFactory<ZooContext>
     {
         public ZooContext CreateDbContext(string[] args)
