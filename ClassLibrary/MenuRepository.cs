@@ -29,7 +29,7 @@ namespace ClassLibrary
             _guideRepo = guideRepo;
 
         }
-        public void MainMenu()
+        public  void MainMenu()
         {
             var mainMenu = AnsiConsole.Prompt(
                     new SelectionPrompt<string>()
@@ -337,7 +337,7 @@ namespace ClassLibrary
             }
 
             // Add visitors to the visit
-            var visitors = _context.Visitors.ToList();
+            var visitors = _context.Visitors.Where(v => !v.Removed).ToList(); //Filter out all removed visitors
             var selectedVisitors = AnsiConsole.Prompt(
                 new MultiSelectionPrompt<Visitor>()
                 .PageSize(10)
@@ -345,6 +345,7 @@ namespace ClassLibrary
                 .AddChoices(visitors));
 
             var selectedVisitorsIds = selectedVisitors.Select(visitor => visitor.Id).ToList();
+
 
             // Visit booked for the next day
             var visitDate = DateTime.Now.AddDays(1).Date;
