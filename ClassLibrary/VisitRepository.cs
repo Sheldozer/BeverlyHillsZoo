@@ -24,7 +24,7 @@ namespace ClassLibrary
 
         public void AddVisit(int animalId, List<int> visitorIds, DateTime visitDate, Visit.TimeSlot visitTimeSlot)
         {
-            var visitorsInVisit = _context.Visitors.Where(v => visitorIds.Contains(v.Id)).ToList();
+            var visitorsInVisit = _context.Visitors.Where(v => visitorIds.Contains(v.Id) && v.Removed==false).ToList(); //filter out the removed visitors
 
             var newVisit = new Visit
             {
@@ -70,10 +70,8 @@ namespace ClassLibrary
             .Select(g => g.ToList())
             .ToList();
 
-            var titleTable = new Spectre.Console.Table();
-            titleTable.AddColumn("[yellow1]Current booked visits[/]");
-            titleTable.Centered();
-            AnsiConsole.Write(titleTable);
+            string title = "[yellow1]Current booked visits[/]";
+            PrintTitleTable(title);
 
             var table = new Spectre.Console.Table();
             table.AddColumn("Date");
@@ -112,27 +110,31 @@ namespace ClassLibrary
         }
 
         /// <summary>
-        /// Seeding the visits but not visitors attached to it
+        /// Seeding db with visits
         /// </summary>
         public void SeedVisitsData()
         {
             if (!_context.Visits.Any())
             {
-                List<int> visitorIds = new List<int> { 1, 2 };
-                List<Visitor> visitorsFirst = _context.Visitors.Where(v => visitorIds.Contains(v.Id)).ToList();
+                var animalIds = _context.Animals.Select(a => a.Id).ToList();
 
-                visitorIds = new List<int> { 3, 1 };
-                List<Visitor> visitorsSecond = _context.Visitors.Where(v => visitorIds.Contains(v.Id)).ToList();
+                if (animalIds.Count == 0)
+                {
+                    throw new Exception("Animal Liberation!");
+                }
 
-                visitorIds = new List<int> { 1 };
-                List<Visitor> visitorsThird = _context.Visitors.Where(v => visitorIds.Contains(v.Id)).ToList();
+                var visitorIds = _context.Visitors.Where(v => !v.Removed).Select(v => v.Id).ToList();
+
+                var visitorsFirst = _context.Visitors.Where(v => visitorIds.Take(2).Contains(v.Id)).ToList();
+                var visitorsSecond = _context.Visitors.Where(v => visitorIds.Skip(1).Take(2).Contains(v.Id)).ToList();
+                var visitorsThird = _context.Visitors.Where(v => visitorIds.Take(1).Contains(v.Id)).ToList();
 
                 var visits = new List<Visit>
-            {
-                    new Visit {AnimalId = 1, VisitDate = new DateTime(2023, 10, 30), VisitTimeSlot = TimeSlot.Morning, Archived = false, Visitors = visitorsFirst},
-                    new Visit {AnimalId = 2, VisitDate = new DateTime(2023, 11, 04), VisitTimeSlot = TimeSlot.Afternoon, Archived = false,Visitors = visitorsSecond},
-                    new Visit {AnimalId = 3, VisitDate = new DateTime(2023, 10, 03), VisitTimeSlot = TimeSlot.Morning, Archived = true, Visitors = visitorsThird},
-            };
+                {
+                    new Visit {AnimalId = animalIds[0], VisitDate = new DateTime(2023, 10, 30), VisitTimeSlot = TimeSlot.Morning, Visitors = visitorsFirst},
+                    new Visit {AnimalId = animalIds[1], VisitDate = new DateTime(2023, 11, 04), VisitTimeSlot = TimeSlot.Afternoon, Archived = false, Visitors = visitorsSecond},
+                    new Visit {AnimalId = animalIds[2], VisitDate = new DateTime(2023, 10, 03), VisitTimeSlot = TimeSlot.Morning, Archived = true, Visitors = visitorsThird},
+                };
 
                 foreach (var visit in visits)
                 {
@@ -140,6 +142,15 @@ namespace ClassLibrary
                 }
                 _context.SaveChanges();
             }
+        }
+
+        public static void PrintTitleTable(string title)
+        {
+            var titleTable = new Spectre.Console.Table();
+            titleTable.AddColumn(title);
+            titleTable.Centered();
+            AnsiConsole.Write(titleTable);
+
         }
        
     }

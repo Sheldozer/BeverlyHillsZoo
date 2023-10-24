@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 
+
 namespace ClassLibrary
 {
     public class VisitorRepository
@@ -77,10 +78,14 @@ namespace ClassLibrary
             .Select(visitor => (visitor.Name, visitor.PassNumber))
             .ToList();
 
-            var table = new Table();
+            string title = "[yellow1]Active visitors[/]";
+            VisitRepository.PrintTitleTable(title);
+
+            var table = new Spectre.Console.Table();
 
             table.AddColumn("Name");
-            table.AddColumn(new TableColumn("Pass Number").Centered());
+            table.Centered();
+            table.AddColumn(new TableColumn("Pass Number"));
 
             foreach (var visitor in visitorInfoList)
             {
@@ -126,17 +131,14 @@ namespace ClassLibrary
                     new Visitor { Name = "Mr Clean", Removed = false },
                     new Visitor { Name = "Dana Scully", Removed = false },
                     new Visitor { Name = "Fox Mulder", Removed = true },
-
             };
 
                 foreach (var visitor in visitors)
                 {
                     _dbContext.Visitors.Add(visitor);
                 }
-
                 _dbContext.SaveChanges();
             }
-
                 
         }
     }

@@ -69,7 +69,11 @@ namespace ClassLibrary
         }
         public void ViewAnimals()
         {
+            string title = "[yellow1]Current list of animals[/]";
+            VisitRepository.PrintTitleTable(title);
+
             var table = new Table();
+            table.Centered();
 
             table.AddColumn("Id");
             table.AddColumn("Name");

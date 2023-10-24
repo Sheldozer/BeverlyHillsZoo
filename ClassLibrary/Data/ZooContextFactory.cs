@@ -18,7 +18,7 @@ namespace ClassLibrary.Data
             var tobiasConnection = "Server=.;Database=BeverlyHillsZoo;Trusted_Connection=True;Encrypt=True;TrustServerCertificate=True";
             var julasConnection = "Server=DESKTOP-P4PT1M9\\SQLEXPRESS;Database=BeverlyHillsZoo;Trusted_Connection=True;TrustServerCertificate=True;Encrypt=False;";
 
-            builder.UseSqlServer(tobiasConnection);
+            builder.UseSqlServer(julasConnection);
 
             return new ZooContext(builder.Options);
         }
