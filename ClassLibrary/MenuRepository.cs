@@ -305,7 +305,8 @@ namespace ClassLibrary
                     MainMenu();
                     break;
                 case "Delete visit":
-                    _visitRepo.DeleteVisit();
+                    
+                    FindDeleteVisit();
                     MainMenu(); 
                     break;
                 case "View visits":
@@ -359,6 +360,63 @@ namespace ClassLibrary
             AnsiConsole.MarkupLine("[green]Visit booked successfully![/]");
             AnsiConsole.Markup("Press any key to continue...");
             Console.ReadKey();
+
+            }
+        public int FindDeleteVisit()
+        {
+            var currentVisitsInfo = _context.Visits
+         .Where(v => v.Archived == false)
+         .SelectMany(v => v.Visitors, (visit, visitor) => new { visit.Animal.Name, visit.VisitDate, VisitorName = visitor.Name, visit.VisitTimeSlot, visit.Id, visitor.PassNumber })
+         .GroupBy(v => v.Id)
+         .Select(g => g.ToList())
+         .ToList(); //Gör detta till egen metod. Återanvänts 2ggr
+
+            var menuItems = new List<string>();
+
+            foreach (var visitInfo in currentVisitsInfo)
+            {
+                string visitorNames = "";
+                foreach (var visitor in visitInfo)
+                {
+                    if (visitorNames == "")
+                    {
+                        visitorNames = visitor.VisitorName;
+                    }
+                    else
+                    {
+                        visitorNames += $", {visitor.VisitorName}";
+                    }
+                }
+                menuItems.Add($"{visitInfo.First().Name} on {visitInfo.First().VisitDate} with {visitorNames}");
+            }
+
+            var visitsRepository = new VisitorRepository();
+            var deleteVisitMenu = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("[green]Delete Visit menu[/]")
+                    .PageSize(10)
+                    .MoreChoicesText("[grey](Move up and down to reveal more options)[/]")
+                    .AddChoices(menuItems)
+            );
+
+            int selectedVisitID = -1; //variable to pick up the id on visit to be deleted
+
+            foreach (var visitInfo in currentVisitsInfo)
+            {
+                var menuItem = $"{visitInfo.First().Name} on {visitInfo.First().VisitDate} with ";
+                if (deleteVisitMenu.StartsWith(menuItem))
+                {
+                    selectedVisitID = visitInfo.First().Id;
+                    break;
+                }
+            }
+
+            var xyz = new VisitRepository(); //remove row
+            xyz.DeleteVisit(selectedVisitID);
+
+            return selectedVisitID;
+
         }
+
     }
 }
