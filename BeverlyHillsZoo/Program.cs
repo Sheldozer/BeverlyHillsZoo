@@ -1,20 +1,32 @@
 ﻿// Beverly Hills Zoo av Tobias J & Julia
 using ClassLibrary;
+using ClassLibrary.Data;
 using ClassLibrary.Models;
+using Microsoft.EntityFrameworkCore;
 
 internal class Program
 {
     private static void Main(string[] args)
     {
-        var updateVisitsStatus = new VisitRepository();
-            updateVisitsStatus.ArchiveOldVisits();
 
-        var visitorSeeding = new VisitorRepository();
-        visitorSeeding.SeedingVisitorData();
-        var animalSeeding = new AnimalRepository();
-        animalSeeding.SeedAnimals();
+        var tobiasOptions = new DbContextOptionsBuilder<ZooContext>()
+            .UseSqlServer("Server=.;Database=BeverlyHillsZoo;Trusted_Connection=True;Encrypt=True;TrustServerCertificate=True;")
+            .Options;
 
-        var menuRepository = new MenuRepository();
+        var juliaOptions = new DbContextOptionsBuilder<ZooContext>()
+          .UseSqlServer("Server=DESKTOP-P4PT1M9\\SQLEXPRESS;Database=BeverlyHillsZoo;Trusted_Connection=True;TrustServerCertificate=True;Encrypt=False;")
+          .Options;
+
+        using var dbContext = new ZooContext(tobiasOptions);
+
+        var visitorRepo = new VisitorRepository(dbContext); // add dependecy injection
+        visitorRepo.SeedingVisitorData();
+        var animalRepo = new AnimalRepository(dbContext);
+        animalRepo.SeedAnimals();
+        var visitRepo = new VisitRepository(dbContext);
+        var guideRepo = new GuideRepository(dbContext);
+
+        var menuRepository = new MenuRepository(dbContext, animalRepo, visitRepo, visitorRepo, guideRepo);
         menuRepository.MainMenu();
     }
 }

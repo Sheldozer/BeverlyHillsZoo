@@ -13,10 +13,22 @@ namespace ClassLibrary
 {
     public class MenuRepository
     {
-        private readonly ZooContext _context = new ZooContext();
+        private readonly ZooContext _context;
 
-        private readonly AnimalRepository _animalRepo = new AnimalRepository();
-        private readonly VisitRepository _visitRepo = new VisitRepository();
+        private readonly AnimalRepository _animalRepo;
+        private readonly VisitRepository _visitRepo;
+        private readonly VisitorRepository _visitorRepo;
+        private readonly GuideRepository _guideRepo;
+
+        public MenuRepository(ZooContext context, AnimalRepository animalRepo, VisitRepository visitRepo, VisitorRepository visitorRepo, GuideRepository guideRepo) 
+        {
+            _context = context;
+            _animalRepo = animalRepo;
+            _visitRepo = visitRepo;
+            _visitorRepo = visitorRepo;
+            _guideRepo = guideRepo;
+
+        }
         public void MainMenu()
         {
             var mainMenu = AnsiConsole.Prompt(
@@ -140,7 +152,7 @@ namespace ClassLibrary
 
                 case "Water":
                     var divingDepth = AnsiConsole.Prompt(
-                        new TextPrompt<int>("Enter animal max altitude")
+                        new TextPrompt<int>("Enter animal diving depth")
                         .Validate(depth =>
                         {
                              if (depth <= 0 || depth > 1000)
@@ -157,7 +169,7 @@ namespace ClassLibrary
                     break;
                 case "Land":
                     var speed = AnsiConsole.Prompt(
-                        new TextPrompt<int>("Enter animal max altitude")
+                        new TextPrompt<int>("Enter animal speed")
                         .Validate(speed =>
                         {
                             if (speed < 0 || speed > 200)
@@ -181,7 +193,6 @@ namespace ClassLibrary
         // Visitors part of menu
         public void ManageVisitorsMenu()
         {
-            var visitorRepo = new VisitorRepository();
             var visitorMenu = AnsiConsole.Prompt(
                     new SelectionPrompt<string>()
                         .Title("[green]Visitor menu[/]")
@@ -198,16 +209,20 @@ namespace ClassLibrary
             switch (visitorMenu)
             {
                 case "Add visitor":
-                visitorRepo.AddVisitor();
+                _visitorRepo.AddVisitor();
+                    ManageVisitorsMenu();
                     break;
                 case "Update visitor":
-                    visitorRepo.UpdateVisitor();
+                    _visitorRepo.UpdateVisitor();
+                    ManageVisitorsMenu();
                     break;
                 case "Delete visitor":
-                    visitorRepo.DeleteVisitor();
+                    _visitorRepo.DeleteVisitor();
+                    ManageVisitorsMenu();
                     break;
                 case "View visitors":
-                    visitorRepo.ViewVisitors();
+                    _visitorRepo.ViewVisitors();
+                    ManageVisitorsMenu();
                     break;
                 case "Go back to main menu":
                     MainMenu();
@@ -224,7 +239,6 @@ namespace ClassLibrary
 
         public void ManageGuidesMenu()
         {
-            var guideRepository = new GuideRepository();
             var guideMenu = AnsiConsole.Prompt(
                     new SelectionPrompt<string>()
                         .Title("[green]Guide menu[/]")
@@ -241,16 +255,20 @@ namespace ClassLibrary
             switch (guideMenu)
             {
                 case "Add guide":
-                    guideRepository.AddGuide();
+                    _guideRepo.AddGuide();
+                    ManageGuidesMenu();
                     break;
                 case "Update guide":
-                    guideRepository.UpdateGuide();
+                    _guideRepo.UpdateGuide();
+                    ManageGuidesMenu();
                     break;
                 case "Delete guide":
-                    guideRepository.DeleteGuide();
+                    _guideRepo.DeleteGuide();
+                    ManageGuidesMenu();
                     break;
                 case "View guides":
-                    guideRepository.ViewGuides();
+                    _guideRepo.ViewGuides();
+                    ManageGuidesMenu();
                     break;
                 case "Go back to main menu":
                     MainMenu();

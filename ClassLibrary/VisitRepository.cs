@@ -14,7 +14,12 @@ namespace ClassLibrary
 {
     public class VisitRepository
     {
-        private readonly ZooContext _context = new ZooContext();
+        private readonly ZooContext _context;
+
+        public VisitRepository(ZooContext context)
+        {
+            _context = context;
+        }
 
         public void AddVisit(int animalId, List<int> visitorIds, DateTime visitDate, Visit.TimeSlot visitTimeSlot)
         {

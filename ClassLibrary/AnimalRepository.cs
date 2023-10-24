@@ -11,15 +11,18 @@ namespace ClassLibrary
 {
     public class AnimalRepository
     {
-        private readonly ZooContext _context = new ZooContext();
+        private readonly ZooContext _context;
+        public AnimalRepository(ZooContext context)
+        {
+            _context = context;
+        }
         public void AddAnimal(Animal animal)
         {
                 _context.Add(animal);
                 _context.SaveChanges();
 
-            AnsiConsole.MarkupLine("[green]Animal added sucsessfully[/]");
-            AnsiConsole.Markup("Press any key to continue..");
-            Console.ReadKey();
+            AnsiConsole.MarkupLine("[green]Animal added sucsessfully[/]\n");
+
             
         }
 
@@ -62,9 +65,7 @@ namespace ClassLibrary
 
             _context.Remove(animalToDelete);
             _context.SaveChanges();
-            AnsiConsole.MarkupLine("[green]Animal deleted sucsessfully[/]");
-            AnsiConsole.Markup("Press any key to continue..");
-            Console.ReadKey();
+            AnsiConsole.MarkupLine("[green]Animal deleted sucsessfully[/]\n");
         }
         public void ViewAnimals()
         {
