@@ -152,7 +152,7 @@ namespace ClassLibrary
 
                 case "Water":
                     var divingDepth = AnsiConsole.Prompt(
-                        new TextPrompt<int>("Enter animal max altitude")
+                        new TextPrompt<int>("Enter animal diving depth")
                         .Validate(depth =>
                         {
                              if (depth <= 0 || depth > 1000)
@@ -169,7 +169,7 @@ namespace ClassLibrary
                     break;
                 case "Land":
                     var speed = AnsiConsole.Prompt(
-                        new TextPrompt<int>("Enter animal max altitude")
+                        new TextPrompt<int>("Enter animal speed")
                         .Validate(speed =>
                         {
                             if (speed < 0 || speed > 200)
