@@ -26,32 +26,9 @@ namespace ClassLibrary
             
         }
 
-        public void UpdateAnimal() 
+        public void UpdateAnimal(Animal animal) 
         { 
-            var animals = _context.Animals.ToList();
-            var animalToupdate = AnsiConsole.Prompt(
-                new SelectionPrompt<Animal>()
-                .Title("Choose Animal To Update")
-                .PageSize(10)
-                .UseConverter(animal => animal.Name)
-                .AddChoices(animals));
-
-            if (animalToupdate is Air airAnimal)
-            {
-                var newMaxAltitude = AnsiConsole.Ask<int>("Enter new max altitude for the animal: ");
-                airAnimal.MaxAltitude = newMaxAltitude;
-            }
-            else if (animalToupdate is Water waterAnimal)
-            {
-                var newDivingDepth = AnsiConsole.Ask<int>("Enter new diving depth for the animal: ");
-                waterAnimal.DivingDepth = newDivingDepth;
-            }
-            else if (animalToupdate is Land landAnimal)
-            {
-                var newSpeed = AnsiConsole.Ask<int>("Enter new speed for the animal: ");
-                landAnimal.Speed = newSpeed;
-            }
-
+            _context.Update(animal);
             _context.SaveChanges();
         }
         public void DeleteAnimal(Animal animal) 
