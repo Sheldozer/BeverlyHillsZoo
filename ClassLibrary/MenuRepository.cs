@@ -93,7 +93,7 @@ namespace ClassLibrary
                     break;
                 // Go to a menu which contains all the animals, choose which one to delete
                 case "Delete animal":
-                    _animalRepo.DeleteAnimal();
+                    DeleteAnimalMenu();
                     ManageAnimalsMenu();
                     break;
                 case "View animals":
@@ -189,6 +189,20 @@ namespace ClassLibrary
                     break;
             }
             ManageAnimalsMenu();
+        }
+
+
+        public void DeleteAnimalMenu()
+        {
+            var animals = _context.Animals.ToList();
+            var animalToDelete = AnsiConsole.Prompt(
+                new SelectionPrompt<Animal>()
+                .PageSize(10)
+                .UseConverter(animal => animal.Name)
+                .AddChoices(animals));
+
+            _animalRepo.DeleteAnimal(animalToDelete);
+            AnsiConsole.MarkupLine("[green]Animal deleted sucsessfully[/]\n");
         }
         // Visitors part of menu
         public void ManageVisitorsMenu()
