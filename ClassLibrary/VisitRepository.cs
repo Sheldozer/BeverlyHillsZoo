@@ -38,11 +38,41 @@ namespace ClassLibrary
                 AnsiConsole.MarkupLine("[red]A visit can have a maximum of 5 visitors![/]");
                 return;
             }
+            
+            bool capForAnimalVisit = CheckAnimalsCurrentLimit(animalId, visitDate);
 
-            _context.Add(newVisit);
-            _context.SaveChanges();
+            if ( capForAnimalVisit == true) //if the animal's visits have capped or not
+            {
+                AnsiConsole.MarkupLine("[red]The animal has already 2 visits this day[/]");
+                return;
+            }
+            else
+            {
+                 _context.Add(newVisit);
+                 _context.SaveChanges();
+                AnsiConsole.MarkupLine("[green]Visit booked successfully![/]");
+            }
+           
         }
 
+        public bool CheckAnimalsCurrentLimit(int animalId, DateTime visitDate)
+        {
+            var currentVisits = _context.Visits
+            .Where(v => v.VisitDate == visitDate)
+            .Where(v => v.AnimalId == animalId)
+            .ToList();
+
+            if (currentVisits.Count == 2)
+            {
+                //Console.WriteLine("The poor animal has suffered enough for today.");
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
         public void DeleteVisit(int toDelete)
         {
 

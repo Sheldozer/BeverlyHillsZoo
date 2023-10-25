@@ -372,7 +372,7 @@ namespace ClassLibrary
             
             _visitRepo.AddVisit(selectedAnimal.Id, selectedVisitorsIds, visitDate, visitTimeSlot);
 
-            AnsiConsole.MarkupLine("[green]Visit booked successfully![/]");
+            //AnsiConsole.MarkupLine("[green]Visit booked successfully![/]");
             AnsiConsole.Markup("Press any key to continue...");
             Console.ReadKey();
 
