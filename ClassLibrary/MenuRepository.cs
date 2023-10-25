@@ -88,7 +88,7 @@ namespace ClassLibrary
                     break;
                 // Go to a menu which contains all the animals, choose which one to update
                 case "Update animal":
-                    _animalRepo.UpdateAnimal();
+                    UpdateAnimalMenu();
                     ManageAnimalsMenu();
                     break;
                 // Go to a menu which contains all the animals, choose which one to delete
@@ -203,6 +203,56 @@ namespace ClassLibrary
 
             _animalRepo.DeleteAnimal(animalToDelete);
             AnsiConsole.MarkupLine("[green]Animal deleted sucsessfully[/]\n");
+        }
+
+        public void UpdateAnimalMenu()
+        {
+            var animals = _context.Animals.ToList();
+            var animalToUpdate = AnsiConsole.Prompt(
+                new SelectionPrompt<Animal>()
+                .Title("Choose Animal To Update")
+                .PageSize(10)
+                .UseConverter(animal => animal.Name)
+                .AddChoices(animals));
+
+            if (animalToUpdate is Air airAnimal)
+            {
+                var newMaxAltitude = AnsiConsole.Prompt(
+                    new TextPrompt<int>("Enter new max altitude for the animal")
+                    .Validate(altitude =>
+                    {
+                        if (altitude <= 0 || altitude > 1000)
+                            return ValidationResult.Error("Please enter a valid altitude for the animal. (1-1000)");
+                        return ValidationResult.Success();
+                    }));
+                airAnimal.MaxAltitude = newMaxAltitude;
+            }
+            else if (animalToUpdate is Water waterAnimal)
+            {
+                var newDivingDepth = AnsiConsole.Prompt(
+                    new TextPrompt<int>("Enter new diving depth for the animal")
+                    .Validate(depth =>
+                    {
+                        if (depth <= 0 || depth > 1000)
+                            return ValidationResult.Error("Please enter a valid depth for the animal. (1-1000)");
+                        return ValidationResult.Success();
+                    }));
+                waterAnimal.DivingDepth = newDivingDepth;
+            }
+            else if (animalToUpdate is Land landAnimal)
+            {
+                var newSpeed = AnsiConsole.Prompt(
+                    new TextPrompt<int>("Enter new speed for the animal")
+                    .Validate(speed =>
+                    {
+                        if (speed < 0 || speed > 200)
+                            return ValidationResult.Error("Please enter a valid speed for the animal. (1-200)");
+                        return ValidationResult.Success();
+                    }));
+                landAnimal.Speed = newSpeed;
+            }
+
+            _animalRepo.UpdateAnimal(animalToUpdate);
         }
         // Visitors part of menu
         public void ManageVisitorsMenu()
