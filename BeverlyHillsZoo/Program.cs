@@ -25,6 +25,8 @@ internal class Program
             var visitsRepo = scope.ServiceProvider.GetRequiredService<VisitRepository>();
             visitsRepo.SeedVisitsData();
 
+            visitsRepo.ArchiveOldVisits();
+
             var menuRepository = scope.ServiceProvider.GetRequiredService<MenuRepository>();
             menuRepository.MainMenu();
 
