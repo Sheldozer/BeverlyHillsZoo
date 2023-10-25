@@ -402,16 +402,16 @@ namespace ClassLibrary
         {
             // Select animal to visit
             var animals = _context.Animals.ToList();
+            animals.Add(null);
             var selectedAnimal = AnsiConsole.Prompt(
                 new SelectionPrompt<Animal>()
                 .Title("Choose an animal to visit")
                 .PageSize(10)
-                .UseConverter(animal => animal.Name)
+                .UseConverter(animal => animal?.Name ?? "Go back to menu")
                 .AddChoices(animals));
 
             if (selectedAnimal == null)
             {
-                AnsiConsole.MarkupLine("[red]No animal selected![/]");
                 return;
             }
 
