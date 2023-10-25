@@ -33,6 +33,7 @@ namespace ClassLibrary
         }
         public void UpdateVisitor()
         {
+            AnsiConsole.MarkupLine("[yellow]Update visitor, enter -1 to return to menu[/]");
             int input = UserInputVisitorPassNumber();
 
             if (input == -1)
@@ -53,7 +54,7 @@ namespace ClassLibrary
         }
         public void DeleteVisitor()
         {
-            AnsiConsole.MarkupLine("[red]Delete visitor[/]");
+            AnsiConsole.MarkupLine("[red]Delete visitor, enter -1 to return to menu[/]");
 
             int input = UserInputVisitorPassNumber();
 
