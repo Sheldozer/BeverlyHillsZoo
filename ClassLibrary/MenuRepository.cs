@@ -195,11 +195,18 @@ namespace ClassLibrary
         public void DeleteAnimalMenu()
         {
             var animals = _context.Animals.ToList();
+            // add a null choice that we turn into "Go back to menu"
+            animals.Add(null);
             var animalToDelete = AnsiConsole.Prompt(
-                new SelectionPrompt<Animal>()
-                .PageSize(10)
-                .UseConverter(animal => animal.Name)
+                new SelectionPrompt<Animal?>()
+                .PageSize(15)
+                .UseConverter(animal => animal?.Name ?? "Go back to menu")
                 .AddChoices(animals));
+
+            if (animalToDelete == null)
+            {
+                ManageAnimalsMenu();
+            }
 
             _animalRepo.DeleteAnimal(animalToDelete);
             AnsiConsole.MarkupLine("[green]Animal deleted sucsessfully[/]\n");
@@ -208,12 +215,18 @@ namespace ClassLibrary
         public void UpdateAnimalMenu()
         {
             var animals = _context.Animals.ToList();
+            animals.Add(null);
             var animalToUpdate = AnsiConsole.Prompt(
                 new SelectionPrompt<Animal>()
                 .Title("Choose Animal To Update")
                 .PageSize(10)
-                .UseConverter(animal => animal.Name)
+                .UseConverter(animal => animal?.Name ?? "Go back to menu")
                 .AddChoices(animals));
+
+            if (animalToUpdate == null)
+            {
+                ManageAnimalsMenu();
+            }
 
             if (animalToUpdate is Air airAnimal)
             {
@@ -426,7 +439,7 @@ namespace ClassLibrary
             AnsiConsole.Markup("Press any key to continue...");
             Console.ReadKey();
 
-            }
+        }
         public int FindDeleteVisit()
         {
             var currentVisitsInfo = _context.Visits
@@ -452,8 +465,10 @@ namespace ClassLibrary
                         visitorNames += $", {visitor.VisitorName}";
                     }
                 }
-                menuItems.Add($"{visitInfo.First().Name} on {visitInfo.First().VisitDate} with {visitorNames}");
+                menuItems.Add($"{visitInfo.First().Name} on {visitInfo.First().VisitDate.ToString("d")} with {visitorNames}");
             }
+
+            menuItems.Add("Go back to menu");
 
             /* _visitRepo.DeleteVisit(selectedVisitID);*/ //Get the ID to the delete method
 
@@ -467,6 +482,11 @@ namespace ClassLibrary
                     .MoreChoicesText("[grey](Move up and down to reveal more options)[/]")
                     .AddChoices(menuItems)
             );
+
+            if ( deleteVisitMenu == "Go back to menu" ) 
+            {
+                ManageVisitMenu();
+            }
 
             int selectedVisitID = -1; //variable to pick up the id on visit to be deleted
 
