@@ -83,7 +83,7 @@ namespace ClassLibrary
 
             foreach (var group in currentVisitsInfo)
             {
-                table.AddRow(group.First().VisitDate.ToString(), group.First().Name, group.First().VisitTimeSlot.ToString(), "[blue]-------[/]");
+                table.AddRow(group.First().VisitDate.ToString("d"), group.First().Name, group.First().VisitTimeSlot.ToString(), "[blue]-------[/]");
 
                 foreach (var item in group)
                 {
