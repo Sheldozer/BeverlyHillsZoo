@@ -22,7 +22,13 @@ namespace ClassLibrary
 
         public void AddVisitor()
         {
+            AnsiConsole.MarkupLine("[yellow]Enter -1 to return to menu[/]");
             string input = UserInputVisitorName();
+
+            if (input == "-1")
+            {
+                return;
+            }
             var newVisitor = new Visitor
             {
                 Name = input,

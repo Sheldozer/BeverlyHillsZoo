@@ -111,7 +111,16 @@ namespace ClassLibrary
 
         public void AddAnimalMenu()
         {
+            var animalType = AnsiConsole.Prompt(
+               new SelectionPrompt<string>()
+               .Title("Choose Animal Type")
+               .PageSize(4)
+               .AddChoices("Air", "Water", "Land", "Go back"));
 
+            if (animalType == "Go back")
+            {
+                ManageAnimalsMenu();
+            }
             var name = AnsiConsole.Prompt(
                 new TextPrompt<string>("Enter animal name: ")
                 .Validate(input =>
@@ -122,11 +131,7 @@ namespace ClassLibrary
                 }));
 
 
-            var animalType = AnsiConsole.Prompt(
-                new SelectionPrompt<string>()
-                .Title("Choose Animal Type")
-                .PageSize(4)
-                .AddChoices("Air", "Water", "Land", "Go back"));
+           
 
             switch (animalType)
             {
@@ -183,9 +188,6 @@ namespace ClassLibrary
                         Speed = speed
                     };
                     _animalRepo.AddAnimal(landAnimal);
-                    break;
-                case "Go back":
-                    ManageAnimalsMenu();
                     break;
             }
             ManageAnimalsMenu();
