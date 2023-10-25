@@ -54,18 +54,10 @@ namespace ClassLibrary
 
             _context.SaveChanges();
         }
-        public void DeleteAnimal() 
+        public void DeleteAnimal(Animal animal) 
         {
-            var animals = _context.Animals.ToList();
-            var animalToDelete = AnsiConsole.Prompt(
-                new SelectionPrompt<Animal>()
-                .PageSize(10)
-                .UseConverter(animal => animal.Name)
-                .AddChoices(animals));
-
-            _context.Remove(animalToDelete);
+            _context.Remove(animal);
             _context.SaveChanges();
-            AnsiConsole.MarkupLine("[green]Animal deleted sucsessfully[/]\n");
         }
         public void ViewAnimals()
         {
