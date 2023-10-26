@@ -159,7 +159,7 @@ namespace ClassLibrary
         /// <summary>
         /// Seeding db with visits
         /// </summary>
-        public void SeedVisitsData()
+        public void SeedVisitsData() //Is dependant on Visitors, Animals and Guides. Investigate
         {
             if (!_context.Visits.Any())
             {
