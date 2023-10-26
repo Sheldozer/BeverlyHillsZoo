@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static ClassLibrary.Models.Visit;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace ClassLibrary
 {
@@ -20,6 +21,8 @@ namespace ClassLibrary
         public VisitRepository(ZooContext context)
         {
             _context = context;
+           
+
         }
 
         public void AddVisit(int animalId, List<int> visitorIds, DateTime visitDate, Visit.TimeSlot visitTimeSlot)
@@ -32,6 +35,7 @@ namespace ClassLibrary
                 Visitors = visitorsInVisit,
                 VisitDate = visitDate,
                 VisitTimeSlot = visitTimeSlot
+                
             };
             if (!newVisit.IsValid())
             {
@@ -43,16 +47,28 @@ namespace ClassLibrary
 
             if ( capForAnimalVisit == true) //if the animal's visits have capped or not
             {
-                AnsiConsole.MarkupLine("[red]The animal has already 2 visits this day[/]");
+                AnsiConsole.MarkupLine("[red]The animal already has 2 visits this day[/]");
                 return;
             }
             else
             {
-                 _context.Add(newVisit);
-                 _context.SaveChanges();
-                AnsiConsole.MarkupLine("[green]Visit booked successfully![/]");
-            }
-           
+                var guideRepository = new GuideRepository(_context);
+                
+                List <Guide> competentGuides = guideRepository.IsGuideCompetent(animalId);
+                Guide chosenGuide = guideRepository.IsGuideAvailable(competentGuides, visitDate, visitTimeSlot);
+                if (chosenGuide == null)
+                {
+                    AnsiConsole.MarkupLine("[red]No available guide at the chosen time[/]");
+                 
+                }
+                else
+                {
+                    newVisit.GuideId = chosenGuide.Id;
+                    _context.Add(newVisit);
+                    _context.SaveChanges();
+                    AnsiConsole.MarkupLine("[green]Visit booked successfully![/]");
+                }                
+            }         
         }
 
         public bool CheckAnimalsCurrentLimit(int animalId, DateTime visitDate)
@@ -95,7 +111,7 @@ namespace ClassLibrary
         {
             var currentVisitsInfo = _context.Visits
             .Where(v => v.Archived == false)
-            .SelectMany(v => v.Visitors, (visit, visitor) => new { visit.Animal.Name, visit.VisitDate, VisitorName = visitor.Name, visit.VisitTimeSlot, visit.Id, visitor.PassNumber })
+            .SelectMany(v => v.Visitors, (visit, visitor) => new { visit.Animal.Name, visit.VisitDate, VisitorName = visitor.Name, visit.VisitTimeSlot, visit.Id, visitor.PassNumber, visit.Guide.FirstName})
             .GroupBy(v => v.Id)
             .Select(g => g.ToList())
             .ToList();
@@ -109,6 +125,7 @@ namespace ClassLibrary
             table.AddColumn(new TableColumn("Time slot"));
             table.AddColumn(new TableColumn("Visitor name"));
             table.AddColumn(new TableColumn("Visitor pass number"));
+            table.AddColumn(new TableColumn("Guide"));
             table.Centered();
 
             foreach (var group in currentVisitsInfo)
@@ -117,7 +134,7 @@ namespace ClassLibrary
 
                 foreach (var item in group)
                 {
-                    table.AddRow("", "", "", item.VisitorName, item.PassNumber.ToString());
+                    table.AddRow("", "", "", item.VisitorName, item.PassNumber.ToString(), item.FirstName);
                 }
             }
             AnsiConsole.Write(table);
@@ -146,12 +163,28 @@ namespace ClassLibrary
         {
             if (!_context.Visits.Any())
             {
-                var animalIds = _context.Animals.Select(a => a.Id).ToList();
+                var animalIds = _context.Animals.Select(a => a.Id).                  
+                    ToList();
 
                 if (animalIds.Count == 0)
                 {
                     throw new Exception("Animal Liberation!");
                 }
+
+                var guideIds = _context.Guides.Select(g =>  g.Id).ToList();
+               
+
+                var habitats = _context.Animals.Select(a =>
+                   (a is Land) ? "land" :
+                   (a is Water) ? "water" :
+                   (a is Air) ? "air" :
+                   "Unknown Habitat");
+
+            for (int i = 0; i<3; i++)
+                {
+                    if (guideIds.)
+                }    
+
 
                 var visitorIds = _context.Visitors.Where(v => !v.Removed).Select(v => v.Id).ToList();
 
