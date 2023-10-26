@@ -39,6 +39,7 @@ namespace ClassLibrary
 
             int input = UserInputGuideNumber();
 
+
             bool isGuideinDatabase = IsGuideInDatabase(input);
             if (isGuideinDatabase)
             {
@@ -51,6 +52,21 @@ namespace ClassLibrary
                 qry.FirstName = updatedGuideName;
                 qry.GuideCompetence = chosenCompetence;
 
+
+
+            bool isGuideinDatabase = IsGuideInDatabase(input);
+            if (isGuideinDatabase)
+            {
+                string updatedGuideName = UserInputsGuideNameUpdate();
+
+                Competence chosenCompetence = UserSelectionGuideCompetenceUpdate();
+
+
+                var qry = _context.Guides.First(g => g.GuideNumber == input);
+                qry.FirstName = updatedGuideName;
+                qry.GuideCompetence = chosenCompetence;
+
+
                 _context.SaveChanges();
             }
             else
@@ -59,7 +75,6 @@ namespace ClassLibrary
 
                 return;
             }
-
 
         }
         /// <summary>
@@ -102,7 +117,7 @@ namespace ClassLibrary
                     guide.FirstName,
                     GuideNumber = guide.GuideNumber.ToString(),
                     GuideCompetence = guide.GuideCompetence.ToString()
-                })
+
             .ToList();
 
             //foreach (var guide in guideInfoList)
@@ -227,7 +242,11 @@ namespace ClassLibrary
 
             var deletedGuide = _context.Guides.FirstOrDefault(g => g.GuideNumber == inputToInt);
 
+
             if (!isParsable && deletedGuide == null) //If the input is not digits or if the guide is not even in the db
+
+            if (!isParsable && deletedGuide==null) //If the input is not digits or if the guide is not even in the db
+
             {
                 Console.WriteLine("No such guide found in system");
                 return -1;
@@ -269,6 +288,7 @@ namespace ClassLibrary
             {
                 chosenCompetence = Competence.Land;
             }
+
             else
             {
                 chosenCompetence = Competence.Water;
