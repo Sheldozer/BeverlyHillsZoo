@@ -37,7 +37,19 @@ namespace ClassLibrary.Data
             modelBuilder.Entity<Visitor>()
                 .Property(p => p.PassNumber)
                 .HasDefaultValueSql("NEXT VALUE FOR PassNumber");
-        }
+
+            modelBuilder.HasSequence<int>("GuideNumber");
+
+            modelBuilder.Entity<Guide>()
+                .Property(g => g.GuideNumber)
+                .HasDefaultValueSql("NEXT VALUE FOR GuideNumber");
+        
+            modelBuilder.Entity<Visit>()
+                .HasOne(v => v.Guide) // Configure the relationship between Visit and Guide
+                .WithMany()
+                .HasForeignKey(v => v.GuideId);
+        
+    }
         
     }
 }

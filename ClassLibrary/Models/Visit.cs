@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ClassLibrary.Models
 {
@@ -12,6 +10,10 @@ namespace ClassLibrary.Models
         [Key]
         public int Id { get; set; }
         public int AnimalId { get; set; }
+
+        [ForeignKey("Guide")]
+        public int GuideId { get; set; }
+
         public DateTime VisitDate { get; set; }
 
         // Is it a Morning or Afternoon visit?
@@ -19,11 +21,11 @@ namespace ClassLibrary.Models
         public bool Archived { get; set; }
 
         // The list of visitors for this visit
-        public ICollection<Visitor> Visitors { get; set; } 
-     
+        public ICollection<Visitor> Visitors { get; set; }
+
         public virtual Animal Animal { get; set; }
 
-
+        public virtual Guide Guide { get; set; }
 
         public enum TimeSlot
         {

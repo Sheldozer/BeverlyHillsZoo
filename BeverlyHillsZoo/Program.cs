@@ -19,13 +19,16 @@ internal class Program
             var animalRepo = scope.ServiceProvider.GetRequiredService<AnimalRepository>();
             animalRepo.SeedAnimals();
 
+            var guideRepo = scope.ServiceProvider.GetService<GuideRepository>();
+            guideRepo.SeedGuides();
+
             var visitorRepo = scope.ServiceProvider.GetRequiredService<VisitorRepository>();
             visitorRepo.SeedingVisitorData();
 
-            var visitsRepo = scope.ServiceProvider.GetRequiredService<VisitRepository>();
-            visitsRepo.SeedVisitsData();
+            //var visitsRepo = scope.ServiceProvider.GetRequiredService<VisitRepository>();
+            //visitsRepo.SeedVisitsData();
 
-            visitsRepo.ArchiveOldVisits();
+            //visitsRepo.ArchiveOldVisits();
 
             var menuRepository = scope.ServiceProvider.GetRequiredService<MenuRepository>();
             menuRepository.MainMenu();
