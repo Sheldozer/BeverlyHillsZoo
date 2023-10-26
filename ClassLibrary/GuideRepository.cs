@@ -39,6 +39,7 @@ namespace ClassLibrary
 
             int input = UserInputGuideNumber();
 
+
             bool isGuideinDatabase = IsGuideInDatabase(input);
             if (isGuideinDatabase)
             {
@@ -51,6 +52,21 @@ namespace ClassLibrary
                 qry.FirstName = updatedGuideName;
                 qry.GuideCompetence = chosenCompetence;
 
+
+
+            bool isGuideinDatabase = IsGuideInDatabase(input);
+            if (isGuideinDatabase)
+            {
+                string updatedGuideName = UserInputsGuideNameUpdate();
+
+                Competence chosenCompetence = UserSelectionGuideCompetenceUpdate();
+
+
+                var qry = _context.Guides.First(g => g.GuideNumber == input);
+                qry.FirstName = updatedGuideName;
+                qry.GuideCompetence = chosenCompetence;
+
+
                 _context.SaveChanges();
             }
             else
@@ -60,7 +76,6 @@ namespace ClassLibrary
                 return;
             }
 
-           
         }
         /// <summary>
         /// Deletes a guide completely from the database. All booked visits connected to the guide are being removed.
@@ -102,7 +117,7 @@ namespace ClassLibrary
                     guide.FirstName,
                     GuideNumber = guide.GuideNumber.ToString(),
                     GuideCompetence = guide.GuideCompetence.ToString()
-            })
+
             .ToList();
 
             //foreach (var guide in guideInfoList)
@@ -121,7 +136,7 @@ namespace ClassLibrary
             }
 
             AnsiConsole.Write(table);
-            
+
         }
 
         public void SeedGuides()
@@ -144,12 +159,12 @@ namespace ClassLibrary
                 _context.SaveChanges();
             }
         }
-     /// <summary>
-     /// Gets us a list of guides with the right competence for the chosen animal
-     /// </summary>
-     /// <param name="animalId"></param>
-     /// <returns>List of suitable guides</returns>
-        public List<Guide> IsGuideCompetent(int animalId) 
+        /// <summary>
+        /// Gets us a list of guides with the right competence for the chosen animal
+        /// </summary>
+        /// <param name="animalId"></param>
+        /// <returns>List of suitable guides</returns>
+        public List<Guide> IsGuideCompetent(int animalId)
         {
             Competence neededCompentence;
 
@@ -178,7 +193,7 @@ namespace ClassLibrary
                 neededCompentence = Competence.Water;
             }
 
-            return _context.Guides.Where(g => g.GuideCompetence == neededCompentence).ToList(); 
+            return _context.Guides.Where(g => g.GuideCompetence == neededCompentence).ToList();
         }
         /// <summary>
         /// Picks the first competent and availbable guide.
@@ -187,7 +202,7 @@ namespace ClassLibrary
         /// <param name="visitDate"></param>
         /// <param name="timeSlot"></param>
         /// <returns>a guide object</returns>
-        public Guide IsGuideAvailable(List <Guide> competentGuides, DateTime visitDate, TimeSlot timeSlot)
+        public Guide IsGuideAvailable(List<Guide> competentGuides, DateTime visitDate, TimeSlot timeSlot)
         {
             Guide chosenGuide = null;
 
@@ -195,8 +210,8 @@ namespace ClassLibrary
             {
                 var availableGuides = _context.Visits
                     .Where(v => v.GuideId == guide.Id) //current guide
-                    .Where(v => v.VisitDate == visitDate) 
-                    .Where(v => v.VisitTimeSlot == timeSlot) 
+                    .Where(v => v.VisitDate == visitDate)
+                    .Where(v => v.VisitTimeSlot == timeSlot)
                     .ToList();
 
                 if (availableGuides.Count == 0)
@@ -210,7 +225,7 @@ namespace ClassLibrary
                     //Sets the guide for the visit if they're not booked on that time slot already
                     chosenGuide = guide;
                     break;
-                }            
+                }
             }
             return chosenGuide;
 
@@ -227,7 +242,11 @@ namespace ClassLibrary
 
             var deletedGuide = _context.Guides.FirstOrDefault(g => g.GuideNumber == inputToInt);
 
+
+            if (!isParsable && deletedGuide == null) //If the input is not digits or if the guide is not even in the db
+
             if (!isParsable && deletedGuide==null) //If the input is not digits or if the guide is not even in the db
+
             {
                 Console.WriteLine("No such guide found in system");
                 return -1;
@@ -269,11 +288,12 @@ namespace ClassLibrary
             {
                 chosenCompetence = Competence.Land;
             }
-            else  
+
+            else
             {
                 chosenCompetence = Competence.Water;
             }
-           
+
 
             return chosenCompetence;
         }
