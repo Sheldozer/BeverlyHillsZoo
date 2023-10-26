@@ -166,37 +166,64 @@ namespace ClassLibrary
                 var animalIds = _context.Animals.Select(a => a.Id).                  
                     ToList();
 
+               
+
                 if (animalIds.Count == 0)
                 {
                     throw new Exception("Animal Liberation!");
                 }
 
-                var guideIds = _context.Guides.Select(g =>  g.Id).ToList();
-               
+                var guideInfoList = _context.Guides //Collect guides and their competence
+                  .Select(g => new {
+                      GuideId = g.Id,
+                      GuideCompetence = g.GuideCompetence
+                  })
+              .ToList();
 
-                var habitats = _context.Animals.Select(a =>
-                   (a is Land) ? "land" :
-                   (a is Water) ? "water" :
-                   (a is Air) ? "air" :
-                   "Unknown Habitat");
+                var animalTypeList = _context.Animals //Collect animal IDs and their habitats
+                .Select(a => new {
+                    AnimalId = a.Id,
+                    HabitatType =
+                        (a is Land) ? "Land" :
+                        (a is Water) ? "Water" :
+                        (a is Air) ? "Air" :
+                        "Unknown"
+                })
+                .ToList(); 
 
-            for (int i = 0; i<3; i++)
+                var firstAnimal = animalTypeList[0]; //Saving first 4 animals which will have visists
+                var secondAnimal = animalTypeList[1];
+                var thirdAnimal = animalTypeList[2];
+                var fourthAnimal = animalTypeList[3];
+
+                var animals = new List<dynamic> { firstAnimal, secondAnimal, thirdAnimal, fourthAnimal};
+                var matchingGuides = new List<dynamic>(); //A list to fill up with matching guides for the 
+
+                foreach (var animal in animals)
                 {
-                    if (guideIds.)
-                }    
-
+                    foreach (var guide in guideInfoList)
+                    {
+                        if (guide.GuideCompetence.ToString() == animal.HabitatType)
+                        {
+                            matchingGuides.Add(guide);
+                            break;
+                        }
+                    }
+                }
 
                 var visitorIds = _context.Visitors.Where(v => !v.Removed).Select(v => v.Id).ToList();
 
                 var visitorsFirst = _context.Visitors.Where(v => visitorIds.Take(2).Contains(v.Id)).ToList();
                 var visitorsSecond = _context.Visitors.Where(v => visitorIds.Skip(1).Take(2).Contains(v.Id)).ToList();
                 var visitorsThird = _context.Visitors.Where(v => visitorIds.Take(1).Contains(v.Id)).ToList();
+                var visitorFourth = _context.Visitors.Where(v => visitorIds.Skip(1).Take(2).Contains(v.Id)).ToList();
 
                 var visits = new List<Visit>
                 {
-                    new Visit {AnimalId = animalIds[0], VisitDate = new DateTime(2023, 10, 30), VisitTimeSlot = TimeSlot.Morning, Visitors = visitorsFirst},
-                    new Visit {AnimalId = animalIds[1], VisitDate = new DateTime(2023, 11, 04), VisitTimeSlot = TimeSlot.Afternoon, Archived = false, Visitors = visitorsSecond},
-                    new Visit {AnimalId = animalIds[2], VisitDate = new DateTime(2023, 10, 03), VisitTimeSlot = TimeSlot.Morning, Archived = true, Visitors = visitorsThird},
+                    new Visit {AnimalId = firstAnimal.AnimalId, VisitDate = new DateTime(2023, 10, 30), VisitTimeSlot = TimeSlot.Morning, Visitors = visitorsFirst, GuideId = matchingGuides[0].GuideId},
+                    new Visit {AnimalId = secondAnimal.AnimalId, VisitDate = new DateTime(2023, 11, 04), VisitTimeSlot = TimeSlot.Afternoon, Archived = false, Visitors = visitorsSecond, GuideId = matchingGuides[1].GuideId},
+                    new Visit {AnimalId = thirdAnimal.AnimalId, VisitDate = new DateTime(2023, 10, 03), VisitTimeSlot = TimeSlot.Morning, Archived = true, Visitors = visitorsThird, GuideId = matchingGuides[2].GuideId},
+                    new Visit {AnimalId = fourthAnimal.AnimalId, VisitDate = new DateTime(2023, 12, 02), VisitTimeSlot = TimeSlot.Morning, Archived = false, Visitors = visitorFourth, GuideId = matchingGuides[3].GuideId}
                 };
 
                 foreach (var visit in visits)
