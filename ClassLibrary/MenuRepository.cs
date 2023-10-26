@@ -20,6 +20,8 @@ namespace ClassLibrary
         private readonly VisitorRepository _visitorRepo;
         private readonly GuideRepository _guideRepo;
 
+        private readonly AnimalInputValidator _validator = new AnimalInputValidator();
+
         public MenuRepository(ZooContext context, AnimalRepository animalRepo, VisitRepository visitRepo, VisitorRepository visitorRepo, GuideRepository guideRepo) 
         {
             _context = context;
@@ -122,16 +124,11 @@ namespace ClassLibrary
                 ManageAnimalsMenu();
             }
             var name = AnsiConsole.Prompt(
-                new TextPrompt<string>("Enter animal name: ")
-                .Validate(input =>
-                {
-                    if (string.IsNullOrWhiteSpace(input) || input.Length > 50)
-                        return ValidationResult.Error("Please enter a valid name for the animal. (1-50 chars)");
-                    return ValidationResult.Success();
-                }));
+                 new TextPrompt<string>("Enter animal name: ")
+                 .Validate(_validator.ValidateAnimalName));
 
 
-           
+
 
             switch (animalType)
             {
@@ -140,12 +137,7 @@ namespace ClassLibrary
 
                     var maxAltitude = AnsiConsole.Prompt(
                         new TextPrompt<int>("Enter animal max altitude")
-                        .Validate(altitude =>
-                        {
-                            if (altitude <= 0 || altitude > 1000)
-                                return ValidationResult.Error("Please enter a valid altitude for the animal. (1-1000)");
-                            return ValidationResult.Success();
-                        }));
+                        .Validate(_validator.ValidateAltitude));
 
                     var airAnimal = new Air
                     {
@@ -158,12 +150,7 @@ namespace ClassLibrary
                 case "Water":
                     var divingDepth = AnsiConsole.Prompt(
                         new TextPrompt<int>("Enter animal diving depth")
-                        .Validate(depth =>
-                        {
-                             if (depth <= 0 || depth > 1000)
-                                return ValidationResult.Error("Please enter a valid depth for the animal. (1-1000)");
-                             return ValidationResult.Success();
-                        }));
+                        .Validate(_validator.ValidateDivingDepth));
 
                     var waterAnimal = new Water
                     {
@@ -175,12 +162,7 @@ namespace ClassLibrary
                 case "Land":
                     var speed = AnsiConsole.Prompt(
                         new TextPrompt<int>("Enter animal speed")
-                        .Validate(speed =>
-                        {
-                            if (speed < 0 || speed > 200)
-                                return ValidationResult.Error("Please enter a valid speed for the animal. (1-200)");
-                            return ValidationResult.Success();
-                        }));
+                        .Validate(_validator.ValidateSpeed));
 
                     var landAnimal = new Land
                     {
