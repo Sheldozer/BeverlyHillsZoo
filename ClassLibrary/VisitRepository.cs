@@ -161,22 +161,43 @@ namespace ClassLibrary
         /// </summary>
         public void SeedVisitsData()
         {
+            //lists of how many animals, guides and visitors currently in db
+            int numberOfAnimals;
+            int numberOfGuides;
+            int numberOfActiveVisitors;
+
             if (!_context.Visits.Any())
             {
-                var animalIds = _context.Animals.Select(a => a.Id).
+                var animalIds = _context.Animals.Select(a => a.Id). //first or default? kolla upp
                     ToList();
 
                 if (animalIds.Count == 0)
                 {
                     throw new Exception("Animal Liberation!");
                 }
+                //Vi behöver annorlunda metod OM det bara finns <3 djur/guides/visitors   
 
+                numberOfAnimals = animalIds.Count;
+                 
                 var guideInfoList = _context.Guides //Collect guides and their competence
                   .Select(g => new {
                       GuideId = g.Id,
                       GuideCompetence = g.GuideCompetence
                   })
               .ToList();
+
+                numberOfGuides = guideInfoList.Count;
+
+                var visitorsList = _context.Visitors
+                    .Where(v =>  v.Removed == false)
+                    .ToList();
+
+                numberOfActiveVisitors = visitorsList.Count;
+
+                if (numberOfActiveVisitors == 0) //hantera det i visitor-seedingen
+                {
+
+                }
 
                 var animalTypeList = _context.Animals //Collect animal IDs and their habitats
                 .Select(a => new {
@@ -209,26 +230,78 @@ namespace ClassLibrary
                     }
                 }
 
-                var visitorIds = _context.Visitors.Where(v => !v.Removed).Select(v => v.Id).ToList();
+                ///////////////////////////////////////////////NEW LOGIC OF SEEDING\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+                List<int> animalsToUse = new List<int>();
 
-                var visitorsFirst = _context.Visitors.Where(v => visitorIds.Take(2).Contains(v.Id)).ToList();
-                var visitorsSecond = _context.Visitors.Where(v => visitorIds.Skip(1).Take(2).Contains(v.Id)).ToList();
-                var visitorsThird = _context.Visitors.Where(v => visitorIds.Take(1).Contains(v.Id)).ToList();
-                var visitorFourth = _context.Visitors.Where(v => visitorIds.Skip(1).Take(2).Contains(v.Id)).ToList();
-
-                var visits = new List<Visit>
+                for (int i =0; i <numberOfAnimals; i++)
                 {
-                    new Visit {AnimalId = firstAnimal.AnimalId, VisitDate = new DateTime(2023, 10, 30), VisitTimeSlot = TimeSlot.Morning, Visitors = visitorsFirst, GuideId = matchingGuides[0].GuideId},
-                    new Visit {AnimalId = secondAnimal.AnimalId, VisitDate = new DateTime(2023, 11, 04), VisitTimeSlot = TimeSlot.Afternoon, Archived = false, Visitors = visitorsSecond, GuideId = matchingGuides[1].GuideId},
-                    new Visit {AnimalId = thirdAnimal.AnimalId, VisitDate = new DateTime(2023, 10, 03), VisitTimeSlot = TimeSlot.Morning, Archived = true, Visitors = visitorsThird, GuideId = matchingGuides[2].GuideId},
-                    new Visit {AnimalId = fourthAnimal.AnimalId, VisitDate = new DateTime(2023, 12, 02), VisitTimeSlot = TimeSlot.Morning, Archived = false, Visitors = visitorFourth, GuideId = matchingGuides[3].GuideId}
+                    animalsToUse.Add(animalIds[i]); //saved IDs (ints)
+                }
+                //We know how many animals and which ones to use
+
+                List<Visitor> visitorsToUse = new List<Visitor>();
+
+                for (int i = 0; i < numberOfActiveVisitors; i++)
+                {
+                    visitorsToUse.Add(visitorsList[i]);
+                }
+                //We know how many visitors and which ones to use
+
+                List<DateTime> dateList = new List<DateTime> //set lists of datetimes to use
+                {
+                    new DateTime(2023, 10, 30),
+                    new DateTime(2023, 11, 04),
+                    new DateTime(2023, 10, 03),//Will automatically be archived!!
+                    new DateTime(2023, 12, 02) 
+                };
+                List<TimeSlot> timeSlots = new List<TimeSlot> //list of timeslots to use
+                {
+                    TimeSlot.Morning,
+                    TimeSlot.Afternoon,
+                    TimeSlot.Morning,
+                    TimeSlot.Morning
                 };
 
-                foreach (var visit in visits)
+                var createVisits = new List<Visit>();
+
+                for (int i = 0; i < 4; i++) //4 is the max of records we will add
                 {
-                    _context.Visits.Add(visit);
+                    int animalId = animalsToUse[i % numberOfAnimals]; //  modulo to cycle through available IDs if needed
+                    Visitor activeVisitor = visitorsToUse[i % numberOfActiveVisitors]; 
+
+                    var habitatType = animalTypeList.First(animal => animal.AnimalId == animalId)?.HabitatType;
+
+                    // Find the first guide with matching competence for the current animal's habitat
+                    var guideWithMatchingCompetence = matchingGuides.FirstOrDefault(guide => guide.GuideCompetence.ToString() == habitatType);
+
+                    Visit visit = new Visit
+                    {
+                        AnimalId = animalId,
+                        VisitDate = dateList[i], 
+                        VisitTimeSlot = timeSlots[i],
+                        Visitors = new List<Visitor> { activeVisitor },
+                        GuideId = guideWithMatchingCompetence?.GuideId ?? 0
+
+                };
+                    createVisits.Add(visit);
                 }
-                _context.SaveChanges();
+
+                //remove all records where the visit does not have competent guide
+                createVisits.RemoveAll(visit => visit.GuideId == 0);
+
+                if (createVisits.Count > 0)
+                {
+                    _context.Visits.AddRange(createVisits);
+                    _context.SaveChanges();
+                }
+                else
+                {
+                    Console.WriteLine("You need to hire guides with the skills to handle our animlas!");
+                }
+
+                /////////////////////////////////////////////////////////////////////////////////////
+
+               
             }
         }
 

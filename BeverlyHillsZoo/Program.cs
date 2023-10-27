@@ -25,15 +25,13 @@ internal class Program
             var visitorRepo = scope.ServiceProvider.GetRequiredService<VisitorRepository>();
             visitorRepo.SeedingVisitorData();
 
-            //var visitsRepo = scope.ServiceProvider.GetRequiredService<VisitRepository>();
-            //visitsRepo.SeedVisitsData();
+            var visitsRepo = scope.ServiceProvider.GetRequiredService<VisitRepository>();
+            visitsRepo.SeedVisitsData();
 
-            //visitsRepo.ArchiveOldVisits();
+            visitsRepo.ArchiveOldVisits();
 
             var menuRepository = scope.ServiceProvider.GetRequiredService<MenuRepository>();
             menuRepository.MainMenu();
-
-            
 
         }
 
@@ -50,7 +48,7 @@ internal class Program
         var tobiasConnection = "Server=.;Database=BeverlyHillsZoo;Trusted_Connection=True;Encrypt=True;TrustServerCertificate=True";
         var juliasConnection = "Server=DESKTOP-P4PT1M9\\SQLEXPRESS;Database=BeverlyHillsZoo;Trusted_Connection=True;TrustServerCertificate=True;Encrypt=False;";
 
-        services.AddDbContext<ZooContext>(options => options.UseSqlServer(tobiasConnection));
+        services.AddDbContext<ZooContext>(options => options.UseSqlServer(juliasConnection));
         // Dependecy injection
         services.AddTransient<AnimalRepository>();
         services.AddTransient<VisitorRepository>();

@@ -16,9 +16,9 @@ namespace ClassLibrary.Data
             var builder = new DbContextOptionsBuilder<ZooContext>();
 
             var tobiasConnection = "Server=.;Database=BeverlyHillsZoo;Trusted_Connection=True;Encrypt=True;TrustServerCertificate=True";
-            var julasConnection = "Server=DESKTOP-P4PT1M9\\SQLEXPRESS;Database=BeverlyHillsZoo;Trusted_Connection=True;TrustServerCertificate=True;Encrypt=False;";
+            var juliasConnection = "Server=DESKTOP-P4PT1M9\\SQLEXPRESS;Database=BeverlyHillsZoo;Trusted_Connection=True;TrustServerCertificate=True;Encrypt=False;";
 
-            builder.UseSqlServer(tobiasConnection);
+            builder.UseSqlServer(juliasConnection);
 
             return new ZooContext(builder.Options);
         }
