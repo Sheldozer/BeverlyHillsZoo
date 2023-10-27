@@ -27,7 +27,7 @@ namespace ClassLibrary
 
         public void AddVisit(int animalId, List<int> visitorIds, DateTime visitDate, Visit.TimeSlot visitTimeSlot)
         {
-            var visitorsInVisit = _context.Visitors.Where(v => visitorIds.Contains(v.Id) && v.Removed==false).ToList(); //filter out the removed visitors
+            var visitorsInVisit = _context.Visitors.Where(v => visitorIds.Contains(v.Id)).ToList(); //filter out the removed visitors
 
             var newVisit = new Visit
             {
@@ -175,7 +175,7 @@ namespace ClassLibrary
                 {
                     throw new Exception("Animal Liberation!");
                 }
-                //Vi behöver annorlunda metod OM det bara finns <3 djur/guides/visitors   
+              
 
                 numberOfAnimals = animalIds.Count;
                  
@@ -194,11 +194,7 @@ namespace ClassLibrary
 
                 numberOfActiveVisitors = visitorsList.Count;
 
-                if (numberOfActiveVisitors == 0) //hantera det i visitor-seedingen
-                {
-
-                }
-
+              
                 var animalTypeList = _context.Animals //Collect animal IDs and their habitats
                 .Select(a => new {
                     AnimalId = a.Id,
@@ -230,8 +226,12 @@ namespace ClassLibrary
                     }
                 }
 
+
                 ///////////////////////////////////////////////NEW LOGIC OF SEEDING\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
                 List<int> animalsToUse = new List<int>();
+
+                var visitorIds = _context.Visitors.Select(v => v.Id).ToList();
+
 
                 for (int i =0; i <numberOfAnimals; i++)
                 {

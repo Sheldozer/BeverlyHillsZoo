@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace ClassLibrary
 {
-    public class MenuRepository
+    public class MenuManager
     {
         private readonly ZooContext _context;
 
@@ -22,7 +22,7 @@ namespace ClassLibrary
 
         private readonly AnimalInputValidator _validator = new AnimalInputValidator();
 
-        public MenuRepository(ZooContext context, AnimalRepository animalRepo, VisitRepository visitRepo, VisitorRepository visitorRepo, GuideRepository guideRepo) 
+        public MenuManager(ZooContext context, AnimalRepository animalRepo, VisitRepository visitRepo, VisitorRepository visitorRepo, GuideRepository guideRepo) 
         {
             _context = context;
             _animalRepo = animalRepo;
@@ -188,7 +188,7 @@ namespace ClassLibrary
             animals.Add(null);
             var animalToDelete = AnsiConsole.Prompt(
                 new SelectionPrompt<Animal?>()
-                .PageSize(15)
+                .PageSize(10)
                 .UseConverter(animal => animal?.Name ?? "Go back to menu")
                 .AddChoices(animals));
 
@@ -476,7 +476,7 @@ namespace ClassLibrary
             }
 
             // Add visitors to the visit
-            var visitors = _context.Visitors.Where(v => !v.Removed).ToList(); //Filter out all removed visitors
+            var visitors = _context.Visitors.ToList(); //Filter out all removed visitors
             var selectedVisitors = AnsiConsole.Prompt(
                 new MultiSelectionPrompt<Visitor>()
                 .PageSize(10)
