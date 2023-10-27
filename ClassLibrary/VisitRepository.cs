@@ -189,7 +189,6 @@ namespace ClassLibrary
                 numberOfGuides = guideInfoList.Count;
 
                 var visitorsList = _context.Visitors
-                    .Where(v =>  v.Removed == false)
                     .ToList();
 
                 numberOfActiveVisitors = visitorsList.Count;
