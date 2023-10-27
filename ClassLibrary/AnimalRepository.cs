@@ -36,40 +36,13 @@ namespace ClassLibrary
             _context.Remove(animal);
             _context.SaveChanges();
         }
-        public void ViewAnimals()
+        public List<Animal> GetAnimals()
         {
-            string title = "[yellow1]Current list of animals[/]";
-            VisitRepository.PrintTitleTable(title);
-
-            var table = new Table();
-            table.Centered();
-
-            table.AddColumn("Id");
-            table.AddColumn("Name");
-            table.AddColumn("Type");
-            table.AddColumn("Max Altitude");
-            table.AddColumn("Speed");
-            table.AddColumn("Diving Depth");
-
-            foreach (var animal in _context.Animals)
-            {
-                if (animal is Air airAnimal)
-                {
-                    table.AddRow(animal.Id.ToString(), animal.Name, "Air", airAnimal.MaxAltitude.ToString(), "-", "-");
-                }
-                else if (animal is Water waterAnimal)
-                {
-                    table.AddRow(animal.Id.ToString(), animal.Name, "Water", "-", "-", waterAnimal.DivingDepth.ToString());
-                }
-                else if (animal is Land landAnimal)
-                {
-                    table.AddRow(animal.Id.ToString(), animal.Name, "Land", "-", landAnimal.Speed.ToString(), "-");
-                }
-            }
-            AnsiConsole.Render(table);
-
-            AnsiConsole.WriteLine("\nPress any key to continue..");
-            Console.ReadKey();
+            return _context.Animals.ToList();
+        }
+        public Animal GetAnimalById(int id)
+        {
+            return _context.Animals.FirstOrDefault(a => a.Id == id);
         }
 
         public void SeedAnimals()

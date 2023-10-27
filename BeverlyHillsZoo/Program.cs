@@ -50,7 +50,7 @@ internal class Program
         var tobiasConnection = "Server=.;Database=BeverlyHillsZoo;Trusted_Connection=True;Encrypt=True;TrustServerCertificate=True";
         var juliasConnection = "Server=DESKTOP-P4PT1M9\\SQLEXPRESS;Database=BeverlyHillsZoo;Trusted_Connection=True;TrustServerCertificate=True;Encrypt=False;";
 
-        services.AddDbContext<ZooContext>(options => options.UseSqlServer(juliasConnection));
+        services.AddDbContext<ZooContext>(options => options.UseSqlServer(tobiasConnection));
         // Dependecy injection
         services.AddTransient<AnimalRepository>();
         services.AddTransient<VisitorRepository>();
