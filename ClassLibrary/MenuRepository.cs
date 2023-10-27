@@ -367,7 +367,6 @@ namespace ClassLibrary
                     MainMenu();
                     break;
                 case "Delete visit":
-                    
                     FindDeleteVisit();
                     MainMenu(); 
                     break;

@@ -274,6 +274,6 @@ namespace ClassLibrary
             AnsiConsole.Write(table);
 
         }
-       
+
     }
 }
