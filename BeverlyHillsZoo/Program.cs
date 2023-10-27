@@ -30,8 +30,8 @@ internal class Program
 
             //visitsRepo.ArchiveOldVisits();
 
-            var menuRepository = scope.ServiceProvider.GetRequiredService<MenuRepository>();
-            menuRepository.MainMenu();
+            var menuManager = scope.ServiceProvider.GetRequiredService<MenuManager>();
+            menuManager.MainMenu();
 
             
 
@@ -56,7 +56,7 @@ internal class Program
         services.AddTransient<VisitorRepository>();
         services.AddTransient<VisitRepository>();
         services.AddTransient<GuideRepository>();
-        services.AddTransient<MenuRepository>();
+        services.AddTransient<MenuManager>();
 
         return services.BuildServiceProvider();
     }
