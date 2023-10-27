@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace ClassLibrary
 {
-    public class MenuRepository
+    public class MenuManager
     {
         private readonly ZooContext _context;
 
@@ -22,7 +22,7 @@ namespace ClassLibrary
 
         private readonly AnimalInputValidator _validator = new AnimalInputValidator();
 
-        public MenuRepository(ZooContext context, AnimalRepository animalRepo, VisitRepository visitRepo, VisitorRepository visitorRepo, GuideRepository guideRepo) 
+        public MenuManager(ZooContext context, AnimalRepository animalRepo, VisitRepository visitRepo, VisitorRepository visitorRepo, GuideRepository guideRepo) 
         {
             _context = context;
             _animalRepo = animalRepo;
