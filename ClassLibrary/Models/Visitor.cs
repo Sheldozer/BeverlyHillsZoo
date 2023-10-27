@@ -18,7 +18,6 @@ namespace ClassLibrary.Models
         public string Name { get; set; }
         public int PassNumber {get; set;}
 
-        public bool Removed { get; set; }
 
 
         // List of visits this visitor has done

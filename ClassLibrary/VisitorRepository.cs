@@ -72,14 +72,13 @@ namespace ClassLibrary
             else
             {
                 var qry = _dbContext.Visitors.FirstOrDefault(v => v.PassNumber == input);
-                    qry.Removed = true;
+                _dbContext.Remove(qry);
                     _dbContext.SaveChanges();
             }
         }
         public void ViewVisitors()
         {
             List<(string Name, int PassNumber)> visitorInfoList = _dbContext.Visitors
-            .Where(visitor => visitor.Removed == false)
             .Select(visitor => new { visitor.Name, visitor.PassNumber })
             .ToList()
             .Select(visitor => (visitor.Name, visitor.PassNumber))
@@ -112,7 +111,7 @@ namespace ClassLibrary
 
             var deletedUser = _dbContext.Visitors.FirstOrDefault(v => v.PassNumber == inputToInt);
 
-            if (!isParsable && deletedUser.Removed == true) //If the input is not digits or if visitor is removed in db
+            if (!isParsable) //If the input is not digits or if visitor is removed in db
             {
                 Console.WriteLine("No such active visitor");
                  return -1;
@@ -134,10 +133,10 @@ namespace ClassLibrary
             {
                 var visitors = new List<Visitor>
             {
-                    new Visitor { Name = "Karmilla Giovanni", Removed = false },
-                    new Visitor { Name = "Mr Clean", Removed = false },
-                    new Visitor { Name = "Dana Scully", Removed = false },
-                    new Visitor { Name = "Fox Mulder", Removed = true },
+                    new Visitor { Name = "Karmilla Giovanni" },
+                    new Visitor { Name = "Mr Clean" },
+                    new Visitor { Name = "Dana Scully"},
+                    new Visitor { Name = "Fox Mulder" },
             };
 
                 foreach (var visitor in visitors)

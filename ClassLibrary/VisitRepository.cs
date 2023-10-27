@@ -27,7 +27,7 @@ namespace ClassLibrary
 
         public void AddVisit(int animalId, List<int> visitorIds, DateTime visitDate, Visit.TimeSlot visitTimeSlot)
         {
-            var visitorsInVisit = _context.Visitors.Where(v => visitorIds.Contains(v.Id) && v.Removed==false).ToList(); //filter out the removed visitors
+            var visitorsInVisit = _context.Visitors.Where(v => visitorIds.Contains(v.Id)).ToList(); //filter out the removed visitors
 
             var newVisit = new Visit
             {
@@ -209,7 +209,7 @@ namespace ClassLibrary
                     }
                 }
 
-                var visitorIds = _context.Visitors.Where(v => !v.Removed).Select(v => v.Id).ToList();
+                var visitorIds = _context.Visitors.Select(v => v.Id).ToList();
 
                 var visitorsFirst = _context.Visitors.Where(v => visitorIds.Take(2).Contains(v.Id)).ToList();
                 var visitorsSecond = _context.Visitors.Where(v => visitorIds.Skip(1).Take(2).Contains(v.Id)).ToList();
