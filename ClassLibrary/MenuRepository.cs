@@ -353,6 +353,7 @@ namespace ClassLibrary
                               "Book a visit for tomorrow",
                               "Delete visit",
                               "View visits",
+                              "View archived visits",
                               "Go back to main menu"
                           ));
 
@@ -372,6 +373,10 @@ namespace ClassLibrary
                     break;
                 case "View visits":
                     _visitRepo.ViewVisits();
+                    MainMenu();
+                    break;
+                case "View archived visits":
+                    VisitRepository.ViewArchivedVisits(_context);
                     MainMenu();
                     break;
                 default:

@@ -215,6 +215,40 @@ namespace ClassLibrary
             AnsiConsole.Write(titleTable);
 
         }
+
+        public static void ViewArchivedVisits(ZooContext context)
+        {
+            var oldVisitsInfo = context.Visits
+            .Where(v => v.Archived == true)
+            .SelectMany(v => v.Visitors, (visit, visitor) => new { visit.Animal.Name, visit.VisitDate, VisitorName = visitor.Name, visit.VisitTimeSlot, visit.Id, visitor.PassNumber, visit.Guide.FirstName })
+            .GroupBy(v => v.Id)
+            .Select(g => g.ToList())
+            .ToList();
+
+            string title = "[yellow1]Archived visits[/]";
+            PrintTitleTable(title);
+
+            var table = new Spectre.Console.Table();
+            table.AddColumn("Date");
+            table.AddColumn(new TableColumn("Animal").Centered());
+            table.AddColumn(new TableColumn("Time slot"));
+            table.AddColumn(new TableColumn("Visitor name"));
+            table.AddColumn(new TableColumn("Visitor pass number"));
+            table.AddColumn(new TableColumn("Guide"));
+            table.Centered();
+
+            foreach (var group in oldVisitsInfo)
+            {
+                table.AddRow(group.First().VisitDate.ToString("d"), group.First().Name, group.First().VisitTimeSlot.ToString(), "[blue]-------[/]");
+
+                foreach (var item in group)
+                {
+                    table.AddRow("", "", "", item.VisitorName, item.PassNumber.ToString(), item.FirstName);
+                }
+            }
+            AnsiConsole.Write(table);
+
+        }
        
     }
 }
