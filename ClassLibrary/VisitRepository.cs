@@ -180,10 +180,10 @@ namespace ClassLibrary
                    (a is Air) ? "air" :
                    "Unknown Habitat");
 
-            for (int i = 0; i<3; i++)
-                {
-                    if (guideIds.)
-                }    
+            //for (int i = 0; i<3; i++)
+            //    {
+            //        if (guideIds.)
+            //    }    
 
 
                 var visitorIds = _context.Visitors.Where(v => !v.Removed).Select(v => v.Id).ToList();

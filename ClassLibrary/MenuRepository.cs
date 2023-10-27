@@ -79,6 +79,7 @@ namespace ClassLibrary
                             "Update animal",
                             "Delete animal",
                             "View animals",
+                            "View specific animal",
                             "Go back to main menu"
                         ));
 
@@ -99,7 +100,11 @@ namespace ClassLibrary
                     ManageAnimalsMenu();
                     break;
                 case "View animals":
-                    _animalRepo.ViewAnimals();
+                    ViewAnimals();
+                    ManageAnimalsMenu();
+                    break;
+                case "View specific animal":
+                    ViewSpecificAnimal();
                     ManageAnimalsMenu();
                     break;
                 case "Go back to main menu":
@@ -172,13 +177,14 @@ namespace ClassLibrary
                     _animalRepo.AddAnimal(landAnimal);
                     break;
             }
+            AnsiConsole.MarkupLine("[green]Animal added sucsessfully[/]\n");
             ManageAnimalsMenu();
         }
 
 
         public void DeleteAnimalMenu()
         {
-            var animals = _context.Animals.ToList();
+            var animals = _animalRepo.GetAnimals();
             // add a null choice that we turn into "Go back to menu"
             animals.Add(null);
             var animalToDelete = AnsiConsole.Prompt(
@@ -198,7 +204,7 @@ namespace ClassLibrary
 
         public void UpdateAnimalMenu()
         {
-            var animals = _context.Animals.ToList();
+            var animals = _animalRepo.GetAnimals();
             animals.Add(null);
             var animalToUpdate = AnsiConsole.Prompt(
                 new SelectionPrompt<Animal>()
@@ -251,6 +257,74 @@ namespace ClassLibrary
 
             _animalRepo.UpdateAnimal(animalToUpdate);
         }
+        public void ViewAnimals()
+        {
+            var animals = _animalRepo.GetAnimals();
+            string title = "[yellow1]Current list of animals[/]";
+            VisitRepository.PrintTitleTable(title);
+
+            var table = new Table();
+            table.Centered();
+
+            table.AddColumn("Id");
+            table.AddColumn("Name");
+            table.AddColumn("Type");
+            table.AddColumn("Max Altitude");
+            table.AddColumn("Speed");
+            table.AddColumn("Diving Depth");
+            table.AddColumn("Animal sound");
+
+            foreach (var animal in animals)
+            {
+                if (animal is Air airAnimal)
+                {
+                    table.AddRow(animal.Id.ToString(), animal.Name, "Air", airAnimal.MaxAltitude.ToString(), "-", "-");
+                }
+                else if (animal is Water waterAnimal)
+                {
+                    table.AddRow(animal.Id.ToString(), animal.Name, "Water", "-", "-", waterAnimal.DivingDepth.ToString());
+                }
+                else if (animal is Land landAnimal)
+                {
+                    table.AddRow(animal.Id.ToString(), animal.Name, "Land", "-", landAnimal.Speed.ToString(), "-");
+                }
+            }
+            AnsiConsole.Render(table);
+
+            AnsiConsole.WriteLine("\nPress any key to continue..");
+            Console.ReadKey();
+        }
+
+        public void ViewSpecificAnimal()
+        {
+            var animals = _animalRepo.GetAnimals();
+
+            var selectedAnimal = AnsiConsole.Prompt(
+                new SelectionPrompt<Animal>()
+                .Title("Please select an animal from the list")
+                .PageSize(10)
+                .AddChoices(animals)
+                .UseConverter(animal => $"{animal.Id}. {animal.Name}"));
+
+            AnsiConsole.MarkupLine($"You have selected {selectedAnimal.Name}");
+            if (selectedAnimal is Water waterAnimal)
+            {
+                AnsiConsole.MarkupLine("Water animals do not make any sound");
+                waterAnimal.Move();
+            }
+            else if (selectedAnimal is Air airAnimal)
+            {
+                airAnimal.Sound();
+                airAnimal.Move();
+            }
+            else if (selectedAnimal is Land landAnimal)
+            {
+                landAnimal.Sound();
+                landAnimal.Move();
+            }
+        }
+
+
         // Visitors part of menu
         public void ManageVisitorsMenu()
         {
@@ -383,7 +457,7 @@ namespace ClassLibrary
         public void BookVisit()
         {
             // Select animal to visit
-            var animals = _context.Animals.ToList();
+            var animals = _animalRepo.GetAnimals();
             animals.Add(null);
             var selectedAnimal = AnsiConsole.Prompt(
                 new SelectionPrompt<Animal>()
